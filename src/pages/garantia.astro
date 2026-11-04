@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import Preguntas from '../components/Preguntas.astro';
+import { sitio } from '../lib/sitio';
+---
+
+<Base titulo="Garantía" descripcion="3 años de garantía legal en relojes nuevos y 12 meses en vintage y segunda mano, con revisión en taller.">
+  <div class="contenedor cabecera-pagina">
+    <h1>Garantía</h1>
+    <p>Si algo falla por un defecto, lo arreglamos o lo cambiamos. Sin discusiones.</p>
+  </div>
+  <section class="seccion" style="padding-top:24px">
+    <div class="contenedor dos dos--desigual" style="align-items:start">
+      <div>
+        <h2>Qué cubre</h2>
+        <ul class="lista">
+          <li><strong>Relojes nuevos:</strong> 3 años de garantía legal desde la entrega.</li>
+          <li><strong>Vintage y segunda mano:</strong> 12 meses, con revisión previa en nuestro taller.</li>
+          <li><strong>Reparaciones del taller:</strong> 12 meses sobre el trabajo realizado.</li>
+        </ul>
+        <h2 style="margin-top:1.4em">Qué no cubre</h2>
+        <p class="texto">El desgaste normal (cristales rayados, correas de cuero, pilas), los golpes, el agua en relojes que no son estancos y las manipulaciones por terceros.</p>
+      </div>
+      <div>
+        <h2>Cómo reclamarla</h2>
+        <ol class="texto" style="padding-left:1.2em">
+          <li>Guarda la factura: es tu prueba de compra.</li>
+          <li>Escríbenos a <a class="enlace" href={`mailto:${sitio.email}`}>{sitio.email}</a> o pásate por la tienda.</li>
+          <li>Revisamos el reloj y te decimos si lo reparamos o lo sustituimos.</li>
+        </ol>
+        <p class="letra-pequena">Información orientativa. Los derechos legales del consumidor se aplican en cualquier caso.</p>
+      </div>
+    </div>
+  </section>
+  <section class="seccion seccion--papel"><div class="contenedor"><Preguntas tema="garantia" titulo="Preguntas sobre la garantía" /></div></section>
+</Base>

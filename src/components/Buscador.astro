@@ -1,0 +1,76 @@
+---
+// "¿Qué reloj me queda bien?": según el contorno de la muñeca, el estilo y el presupuesto.
+import { ETIQUETA_CATEGORIA, diametroIdeal, encaje, type Reloj } from '../lib/util';
+
+interface Props { relojes: Reloj[] }
+const { relojes } = Astro.props;
+const resumen = relojes.map((r) => ({ categoria: r.data.categoria, precio: r.data.precio, diametro: r.data.diametro }));
+const maxPrecio = Math.ceil(Math.max(...relojes.map((r) => r.data.precio)) / 50) * 50;
+const categorias = [...new Set(relojes.map((r) => r.data.categoria))];
+---
+
+<form class="buscador" id="buscador" action="/tienda/" method="get" data-relojes={JSON.stringify(resumen)}>
+  <h2>¿Qué reloj me queda bien?</h2>
+  <p>Mide tu muñeca y te enseñamos los relojes de tu tamaño.</p>
+
+  <div class="campo">
+    <div class="rango"><label for="b-muneca">Contorno de mi muñeca</label><output id="b-muneca-v" class="num" for="b-muneca"></output></div>
+    <input id="b-muneca" name="muneca" type="range" min="13" max="21" step="0.5" value="17" />
+    <div class="muneca-dibujo" aria-hidden="true">
+      <svg viewBox="0 0 300 54" role="presentation">
+        <line x1="10" y1="28" x2="290" y2="28" stroke="#a7afba" stroke-width="2" />
+        <rect id="b-zona" x="100" y="16" width="60" height="24" rx="3" fill="#bde86b" />
+        {[30, 35, 40, 45, 50].map((n) => (
+          <g><line x1={10 + ((n - 28) / 26) * 280} y1="22" x2={10 + ((n - 28) / 26) * 280} y2="34" stroke="#101a2b" stroke-width="1.5" /><text x={10 + ((n - 28) / 26) * 280} y="52" text-anchor="middle" font-size="11" font-family="Jost Variable, sans-serif" fill="#556070">{n}</text></g>
+        ))}
+      </svg>
+    </div>
+    <p class="encaje-texto" id="b-texto" aria-live="polite"></p>
+  </div>
+
+  <div class="campo">
+    <label for="b-categoria">Estilo</label>
+    <select id="b-categoria" name="categoria">
+      <option value="">Todos los estilos</option>
+      {categorias.map((c) => <option value={c}>{ETIQUETA_CATEGORIA[c]}</option>)}
+    </select>
+  </div>
+
+  <div class="campo">
+    <div class="rango"><label for="b-precio">Presupuesto máximo</label><output id="b-precio-v" class="num" for="b-precio"></output></div>
+    <input id="b-precio" name="max" type="range" min="50" max={maxPrecio} step="10" value={maxPrecio} />
+  </div>
+
+  <button class="btn btn--rojo btn--bloque" type="submit" id="b-enviar">Ver relojes</button>
+</form>
+
+<script>
+  const f = document.getElementById('buscador') as HTMLFormElement | null;
+  if (f) {
+    const relojes: { categoria: string; precio: number; diametro: number }[] = JSON.parse(f.dataset.relojes || '[]');
+    const muneca = f.querySelector<HTMLInputElement>('#b-muneca')!;
+    const precio = f.querySelector<HTMLInputElement>('#b-precio')!;
+    const cat = f.querySelector<HTMLSelectElement>('#b-categoria')!;
+    const boton = f.querySelector<HTMLButtonElement>('#b-enviar')!;
+    const zona = f.querySelector<SVGRectElement>('#b-zona')!;
+    const nf = new Intl.NumberFormat('es-ES', { useGrouping: 'always' });
+    const ideal = (c: number) => 2.35 * c;
+    const x = (mm: number) => 10 + ((Math.min(54, Math.max(28, mm)) - 28) / 26) * 280;
+    const actualizar = () => {
+      const c = Number(muneca.value), max = Number(precio.value);
+      const d = ideal(c), lo = d - 2.5, hi = d + 2.5;
+      f.querySelector('#b-muneca-v')!.textContent = `${nf.format(c)} cm`;
+      f.querySelector('#b-precio-v')!.textContent = `${nf.format(max)} €`;
+      zona.setAttribute('x', String(x(lo))); zona.setAttribute('width', String(x(hi) - x(lo)));
+      f.querySelector('#b-texto')!.textContent = `Te sientan mejor cajas de ${Math.round(lo)} a ${Math.round(hi)} mm.`;
+      const n = relojes.filter((r) => Math.abs(r.diametro - d) <= 4.5 && (!cat.value || r.categoria === cat.value) && r.precio <= max).length;
+      boton.textContent = n === 0 ? 'Ver toda la tienda' : n === 1 ? 'Ver 1 reloj' : `Ver ${n} relojes`;
+    };
+    f.addEventListener('input', actualizar);
+    actualizar();
+    f.addEventListener('submit', () => {
+      if (Number(precio.value) >= Number(precio.max)) precio.disabled = true;
+      if (!cat.value) cat.disabled = true;
+    });
+  }
+</script>

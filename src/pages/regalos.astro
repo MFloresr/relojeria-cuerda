@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import RelojCard from '../components/RelojCard.astro';
+import { getNuevos } from '../lib/contenido';
+import { euros } from '../lib/util';
+
+const nuevos = await getNuevos();
+const tramos = [
+  { id: 'hasta-70', titulo: 'Hasta 70 €', texto: 'Para un detalle: digitales y de uso diario que se llevan sin pensar.', f: (p: number) => p <= 70 },
+  { id: '70-150', titulo: 'De 70 a 150 €', texto: 'Un regalo que se nota: automáticos de entrada y deportivos resistentes.', f: (p: number) => p > 70 && p <= 150 },
+  { id: '150-500', titulo: 'De 150 a 500 €', texto: 'Para una ocasión especial: buceo, campo y vestir de calidad.', f: (p: number) => p > 150 && p <= 500 },
+  { id: 'mas-500', titulo: 'Más de 500 €', texto: 'Un reloj para toda la vida, con cristal de zafiro.', f: (p: number) => p > 500 },
+].map((t) => ({ ...t, relojes: nuevos.filter((r) => t.f(r.data.precio)) })).filter((t) => t.relojes.length);
+---
+
+<Base titulo="Guía de regalos: relojes por presupuesto" descripcion="Elige un reloj de regalo según lo que quieras gastar. Con caja, tarjeta de regalo y cambio de talla de brazalete sin coste.">
+  <div class="contenedor cabecera-pagina">
+    <h1>Regalar un reloj</h1>
+    <p>Elige por presupuesto. Si no acierta de talla, cambiamos el brazalete sin coste y lo entregamos listo para regalar.</p>
+  </div>
+
+  {tramos.map((t, i) => (
+    <section class={`seccion ${i % 2 ? 'seccion--papel' : ''}`} style={i === 0 ? 'padding-top:24px' : undefined} aria-labelledby={`t-${t.id}`}>
+      <div class="contenedor">
+        <div class="cabecera-seccion"><h2 id={`t-${t.id}`}>{t.titulo}</h2><p>{t.texto}</p></div>
+        <div class="rejilla">{t.relojes.map((r) => <RelojCard reloj={r} />)}</div>
+      </div>
+    </section>
+  ))}
+
+  <section class="cinta"><div class="contenedor"><h2>¿Dudas? Te asesoramos sin compromiso.</h2><a class="btn" href="/contacto/?asunto=regalo">Pedir consejo</a></div></section>
+</Base>

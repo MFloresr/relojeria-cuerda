@@ -1,0 +1,32 @@
+{
+  "marca": "Casio",
+  "modelo": "G-Shock GA-B2100",
+  "categoria": "deportivo",
+  "movimiento": "solar",
+  "estado": "nuevo",
+  "diametro": 45,
+  "grosor": 12,
+  "entreasas": 49,
+  "atm": 20,
+  "cristal": "Mineral",
+  "caja": "Resina de carbono",
+  "correa": "Resina",
+  "anchoCorrea": 22,
+  "peso": 51,
+  "precio": 139,
+  "stock": 12,
+  "foto": "../../assets/fotos/gshock-gab2100.jpg",
+  "fotoAlt": "Casio G-Shock GA-B2100 octogonal con esfera analógica y digital",
+  "destacado": true,
+  "novedad": true,
+  "resumen": "Octogonal, fino para ser G-Shock y con carga solar.",
+  "descripcion": "Caja de resina reforzada con fibra de carbono, esfera analógica y digital y carga solar. Se conecta con el móvil por Bluetooth para mantener la hora siempre ajustada.",
+  "extras": [
+    "Carga solar",
+    "Bluetooth con el móvil",
+    "Hermético 200 m",
+    "Caja ligera"
+  ],
+  "garantiaMeses": 36,
+  "ajuste": "cover"
+}

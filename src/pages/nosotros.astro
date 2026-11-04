@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { getEquipo } from '../lib/contenido';
+import foto from '../assets/fotos/ambiente-montana.jpg';
+
+const equipo = await getEquipo();
+const iniciales = (n: string) => n.split(' ').map((p) => p[0]).join('');
+---
+
+<Base titulo="Quiénes somos" descripcion="Una relojería independiente de barrio con tienda, taller y venta online. Conoce a quienes te atenderán.">
+  <div class="contenedor cabecera-pagina">
+    <h1>Quiénes somos</h1>
+    <p>Una relojería de barrio donde tienes a quien lo repara y a quien te lo vende hablando entre sí.</p>
+  </div>
+  <section class="seccion" style="padding-top:24px">
+    <div class="contenedor dos">
+      <div>
+        <h2>Un taller que se abrió a la calle</h2>
+        <p class="texto">Empezamos reparando relojes de vecinos y clientes. Con el tiempo, empezaron a pedirnos consejo antes de comprar, y de ahí salió la tienda. Hoy vendemos relojes nuevos y vintage, y todo lo que sale de aquí ha pasado por las manos del relojero.</p>
+        <ul class="lista">
+          <li>Te decimos con sinceridad si un reloj te queda bien o no.</li>
+          <li>Te damos el presupuesto antes de tocar un reloj.</li>
+          <li>Seguimos a tu lado después de la compra, en el taller.</li>
+        </ul>
+      </div>
+      <div class="foto-recta"><Image src={foto} alt="Reloj de pulsera sobre una roca, con un valle de fondo" widths={[500, 800]} sizes="(min-width: 900px) 45vw, 100vw" /></div>
+    </div>
+  </section>
+  <section class="seccion seccion--papel">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2>El equipo</h2></div>
+      <div class="equipo">
+        {equipo.map((p) => (
+          <article class="persona">
+            <span class="persona__iniciales" aria-hidden="true">{iniciales(p.data.nombre)}</span>
+            <h3>{p.data.nombre}</h3>
+            <p class="cargo">{p.data.cargo}</p>
+            <p style="margin:0">{p.data.texto}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

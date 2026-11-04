@@ -1,0 +1,30 @@
+{
+  "marca": "Tissot",
+  "modelo": "PR 516 (1972)",
+  "categoria": "vestir",
+  "movimiento": "automatico",
+  "estado": "vintage",
+  "diametro": 37,
+  "grosor": 11,
+  "entreasas": 44,
+  "atm": 3,
+  "cristal": "Mineral",
+  "caja": "Acero",
+  "correa": "Acero",
+  "anchoCorrea": 19,
+  "peso": 110,
+  "precio": 349,
+  "stock": 1,
+  "foto": "../../assets/fotos/v-tissot-pr516.jpg",
+  "fotoAlt": "Tissot PR 516 de 1972 con esfera gris y calendario día-fecha",
+  "destacado": false,
+  "novedad": false,
+  "resumen": "Un deportivo elegante de principios de los setenta.",
+  "descripcion": "Pieza de 1972 con esfera gris y caja de acero. Revisada, con mecanismo regulado y lista para llevar.",
+  "extras": [
+    "Pieza única",
+    "Revisada en taller",
+    "Garantía de 12 meses"
+  ],
+  "garantiaMeses": 12
+}

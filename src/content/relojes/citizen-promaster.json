@@ -1,0 +1,31 @@
+{
+  "marca": "Citizen",
+  "modelo": "Promaster Eco-Drive Diver",
+  "categoria": "buceo",
+  "movimiento": "solar",
+  "estado": "nuevo",
+  "diametro": 44,
+  "grosor": 13,
+  "entreasas": 51,
+  "atm": 20,
+  "cristal": "Mineral",
+  "caja": "Acero",
+  "correa": "Nylon",
+  "anchoCorrea": 22,
+  "peso": 102,
+  "precio": 289,
+  "stock": 7,
+  "foto": "../../assets/fotos/citizen-promaster.jpg",
+  "fotoAlt": "Citizen Promaster Eco-Drive de buceo con esfera oscura y correa de nylon",
+  "destacado": false,
+  "novedad": false,
+  "resumen": "Buceo a 200 metros y sin cambiar nunca la pila.",
+  "descripcion": "Funciona con la luz y no necesita pilas. Bisel giratorio, esfera con luminiscencia y correa de nylon que se seca rápido. Es uno de los relojes más prácticos para el verano.",
+  "extras": [
+    "Carga con la luz",
+    "Sin cambio de pila",
+    "Hermético 200 m",
+    "Correa de nylon"
+  ],
+  "garantiaMeses": 36
+}

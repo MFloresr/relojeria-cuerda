@@ -1,0 +1,80 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { diametroIdeal } from '../lib/util';
+import foto from '../assets/fotos/correa-bund.jpg';
+
+const filas = [14, 15, 16, 17, 18, 19, 20, 21].map((c) => ({ c, d: Math.round(diametroIdeal(c)), lo: Math.round(diametroIdeal(c) - 2.5), hi: Math.round(diametroIdeal(c) + 2.5) }));
+---
+
+<Base titulo="Guía de tallas: qué reloj te queda bien" descripcion="Mide tu muñeca y descubre qué diámetro de caja te sienta mejor. Con una tabla de referencia y consejos sobre asas y grosor.">
+  <div class="contenedor cabecera-pagina">
+    <h1>Qué reloj te queda bien</h1>
+    <p>Un reloj se ve bien cuando es de tu tamaño. Mide tu muñeca y mira qué diámetro te favorece.</p>
+  </div>
+
+  <section class="seccion" style="padding-top:24px">
+    <div class="contenedor dos dos--desigual" style="align-items:start">
+      <div>
+        <h2>1. Mide tu muñeca</h2>
+        <ol class="texto" style="padding-left:1.2em">
+          <li>Rodea la muñeca con un metro de costura, justo detrás del hueso que sobresale.</li>
+          <li>Ajusta sin apretar y apunta los centímetros.</li>
+          <li>Sin metro: usa una tira de papel o un cordel, márcalo y mídelo con una regla.</li>
+        </ol>
+        <h2 style="margin-top:1.4em">2. Mira qué caja te sienta bien</h2>
+        <form class="buscador" id="calc" onsubmit="return false" style="max-width:480px">
+          <div class="campo">
+            <div class="rango"><label for="g-muneca">Contorno de mi muñeca</label><output id="g-v" class="num" for="g-muneca"></output></div>
+            <input id="g-muneca" type="range" min="13" max="21" step="0.5" value="17" />
+          </div>
+          <p class="encaje-texto" id="g-texto" aria-live="polite" style="margin:0"></p>
+          <p style="margin:16px 0 0"><a class="btn btn--rojo" id="g-enlace" href="/tienda/">Ver los relojes que me quedan bien</a></p>
+        </form>
+      </div>
+      <div>
+        <div class="foto-recta"><Image src={foto} alt="Reloj de esfera negra con correa de cuero sobre piel roja" widths={[500, 800]} sizes="(min-width: 900px) 40vw, 100vw" /></div>
+        <h2 style="margin-top:24px">La regla práctica</h2>
+        <p class="texto">El diámetro ideal de la caja es algo más de dos veces y un tercio el contorno de tu muñeca en centímetros. Con 17 cm, por ejemplo, te sientan bien las cajas de unos 40 mm.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--papel" aria-labelledby="t-tabla">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="t-tabla">Tabla de referencia</h2><p>Orientativa: cada muñeca es distinta, y el estilo del reloj también cuenta.</p></div>
+      <div class="tabla-envoltorio" style="max-width:640px">
+        <table>
+          <caption class="solo-lectores">Diámetro de caja recomendado según el contorno de muñeca</caption>
+          <thead><tr><th scope="col">Contorno de muñeca</th><th scope="col" class="num">Diámetro ideal</th><th scope="col" class="num">Rango que te queda bien</th></tr></thead>
+          <tbody>{filas.map((f) => <tr><th scope="row">{f.c} cm</th><td class="num">{f.d}&nbsp;mm</td><td class="num">{f.lo} a {f.hi}&nbsp;mm</td></tr>)}</tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2>Tres cosas más que cuentan</h2></div>
+      <div class="opiniones">
+        <div class="opinion"><h3>La distancia entre asas</h3><p style="margin:0">Es lo que de verdad apoya en tu muñeca. Si las asas sobresalen por los lados, el reloj te quedará grande aunque el diámetro parezca correcto.</p></div>
+        <div class="opinion"><h3>El grosor</h3><p style="margin:0">Un reloj de más de 13 mm se engancha en los puños de la camisa. Para vestir, mejor de 11 mm o menos.</p></div>
+        <div class="opinion"><h3>El color de la esfera</h3><p style="margin:0">Las esferas oscuras parecen más pequeñas y las claras más grandes. Con una caja grande, una esfera negra disimula.</p></div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const r = document.getElementById('g-muneca') as HTMLInputElement | null;
+  if (r) {
+    const nf = new Intl.NumberFormat('es-ES');
+    const act = () => {
+      const c = Number(r.value), d = 2.35 * c;
+      document.getElementById('g-v')!.textContent = `${nf.format(c)} cm`;
+      document.getElementById('g-texto')!.textContent = `Te sientan mejor cajas de ${Math.round(d - 2.5)} a ${Math.round(d + 2.5)} mm; la ideal ronda los ${Math.round(d)} mm.`;
+      (document.getElementById('g-enlace') as HTMLAnchorElement).href = `/tienda/?muneca=${c}&encaje=1`;
+    };
+    r.addEventListener('input', act); act();
+  }
+</script>

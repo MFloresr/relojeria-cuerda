@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Formulario from '../components/Formulario.astro';
+import Preguntas from '../components/Preguntas.astro';
+import { getServicios } from '../lib/contenido';
+import { euros } from '../lib/util';
+import movimiento from '../assets/fotos/movimiento.jpg';
+
+const servicios = await getServicios();
+const hoy = new Date().toISOString().slice(0, 10);
+const pasos = [
+  ['Lo recibimos', 'Anotamos el estado del reloj, con fotos, y te damos un presupuesto antes de tocar nada.'],
+  ['Lo abrimos', 'Nuestro relojero lo desmonta y te dice qué tiene y qué necesita.'],
+  ['Lo arreglamos', 'Limpiamos, engrasamos y regulamos, con piezas de calidad.'],
+  ['Lo pruebas tú', 'Comprobamos la marcha y la estanqueidad. Te lo entregamos con garantía.'],
+];
+---
+
+<Base titulo="Taller de relojería" descripcion="Cambio de pila y correa, revisión de relojes automáticos, estanqueidad, cristales y pulido. Presupuesto antes de empezar y cita online.">
+  <div class="contenedor cabecera-pagina">
+    <h1>Taller de relojería</h1>
+    <p>Te damos el presupuesto antes de tocar nada. Y si no merece la pena arreglarlo, te lo decimos.</p>
+  </div>
+
+  <section class="seccion" style="padding-top:24px" aria-labelledby="t-servicios">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="t-servicios">Servicios y precios</h2><p>Precios con IVA, «desde». El presupuesto final depende del modelo.</p></div>
+      <div class="servicios">
+        {servicios.map((s) => (
+          <article class="servicio">
+            <h3>{s.data.nombre}</h3>
+            <p>{s.data.descripcion}</p>
+            <ul class="lista">{s.data.incluye.map((i) => <li>{i}</li>)}</ul>
+            <div class="servicio__precio"><span class="gris">{s.data.plazo}</span><strong class="num">Desde {euros(s.data.desde)}</strong></div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--esfera" aria-labelledby="t-pasos">
+    <div class="contenedor dos dos--desigual" style="align-items:start">
+      <div>
+        <h2 id="t-pasos">Cómo trabajamos</h2>
+        <ol class="lista" style="counter-reset:paso">
+          {pasos.map(([a, b]) => <li><strong>{a}.</strong> {b}</li>)}
+        </ol>
+      </div>
+      <div class="foto-recta"><Image src={movimiento} alt="Mecanismo de un reloj automático visto por la tapa trasera" widths={[500, 800]} sizes="(min-width: 900px) 40vw, 100vw" /></div>
+    </div>
+  </section>
+
+  <section class="seccion" id="cita" aria-labelledby="t-cita">
+    <div class="contenedor dos dos--desigual" style="align-items:start">
+      <div>
+        <h2 id="t-cita">Pide cita</h2>
+        <p class="texto">Cuéntanos qué le pasa al reloj y cuándo te viene bien. Te confirmamos la hora por teléfono o correo. Para pilas y correas no hace falta cita: pásate cuando quieras.</p>
+      </div>
+      <Formulario tipo="cita" boton="Pedir cita" mensajeOk="Cita solicitada. Te confirmamos la hora en el próximo día laborable.">
+        <div><label for="c-nombre">Nombre <span class="marca" aria-hidden="true">*</span></label><input id="c-nombre" name="nombre" type="text" autocomplete="name" required /><p class="error" data-error-para="nombre"></p></div>
+        <div><label for="c-tel">Teléfono <span class="marca" aria-hidden="true">*</span></label><input id="c-tel" name="telefono" type="tel" autocomplete="tel" required pattern="[0-9 +]{9,}" title="Escribe un teléfono de al menos 9 cifras" /><p class="error" data-error-para="telefono"></p></div>
+        <div><label for="c-reloj">Reloj (marca y modelo) <span class="marca" aria-hidden="true">*</span></label><input id="c-reloj" name="reloj" type="text" required /><p class="error" data-error-para="reloj"></p></div>
+        <div>
+          <label for="c-servicio">Servicio</label>
+          <select id="c-servicio" name="servicio"><option value="">No lo sé, que me aconsejéis</option>{servicios.map((s) => <option value={s.id}>{s.data.nombre}</option>)}</select>
+        </div>
+        <div><label for="c-fecha">Día que prefieres</label><input id="c-fecha" name="fecha" type="date" min={hoy} /></div>
+        <div class="ancho-total"><label for="c-msg">¿Qué le pasa al reloj?</label><textarea id="c-msg" name="mensaje"></textarea></div>
+      </Formulario>
+    </div>
+  </section>
+
+  <section class="seccion seccion--papel"><div class="contenedor"><Preguntas tema="taller" titulo="Dudas sobre el taller" /></div></section>
+</Base>

@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base titulo="Comparar relojes" descripcion="Compara hasta tres relojes: tamaño, movimiento, resistencia al agua, materiales y precio." noindex>
+  <div class="contenedor cabecera-pagina">
+    <h1>Comparar relojes</h1>
+    <p>Pon hasta tres relojes lado a lado. Las diferencias se ven mejor en una tabla.</p>
+  </div>
+  <section class="seccion" style="padding-top:16px">
+    <div class="contenedor">
+      <div id="c-vacio" class="vacio" hidden>
+        <h2 style="font-size:2rem">Todavía no has elegido relojes</h2>
+        <p>En la tienda, marca «Comparar» en los relojes que te interesen.</p>
+        <a class="btn" href="/tienda/">Ir a la tienda</a>
+      </div>
+      <div id="c-tabla" class="tabla-envoltorio" hidden></div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { cargarCatalogo, formatoEuros, guardarComparar, leerComparar, type Resumen } from '../lib/carrito';
+
+  const vacio = document.getElementById('c-vacio')!;
+  const tabla = document.getElementById('c-tabla')!;
+  const metros = (atm: number) => `${atm} atm (${atm * 10} m)`;
+  const filas: [string, (r: Resumen) => string][] = [
+    ['Precio', (r) => formatoEuros(r.precio)],
+    ['Estilo', (r) => r.categoria],
+    ['Movimiento', (r) => r.movimiento],
+    ['Diámetro', (r) => `${r.diametro} mm`],
+    ['Grosor', (r) => `${r.grosor} mm`],
+    ['Entre asas', (r) => `${r.entreasas} mm`],
+    ['Peso', (r) => `${r.peso} g`],
+    ['Caja', (r) => r.caja],
+    ['Cristal', (r) => r.cristal],
+    ['Correa', (r) => `${r.correa}, ${r.anchoCorrea} mm`],
+    ['Resistencia al agua', (r) => metros(r.atm)],
+    ['Garantía', (r) => `${r.garantiaMeses} meses`],
+  ];
+
+  async function pintar() {
+    const catalogo = await cargarCatalogo();
+    const ids = leerComparar();
+    const elegidos = ids.map((id) => catalogo.find((r) => r.id === id)).filter((r): r is Resumen => !!r);
+    if (!elegidos.length) { tabla.hidden = true; vacio.hidden = false; return; }
+    vacio.hidden = true; tabla.hidden = false;
+    const cabecera = elegidos.map((r) => `<th scope="col"><img src="${r.foto}" alt="${r.fotoAlt.replace(/"/g, '&quot;')}" width="120" height="120" /><br /><a href="/tienda/${r.id}/" style="text-decoration:none">${r.nombre}</a><br /><button type="button" class="quitar" style="margin:6px 0 0" data-quitar="${r.id}">Quitar</button></th>`).join('');
+    const cuerpo = filas.map(([nombre, f]) => `<tr><th scope="row">${nombre}</th>${elegidos.map((r) => `<td class="num">${f(r)}</td>`).join('')}</tr>`).join('');
+    const compra = elegidos.map((r) => `<td><button type="button" class="btn btn--rojo btn--peq" data-anadir="${r.id}" data-stock="${r.stock}" data-nombre="${r.nombre}">Añadir al carrito</button></td>`).join('');
+    tabla.innerHTML = `<table class="tabla-comparar"><caption class="solo-lectores">Comparación de relojes</caption><thead><tr><th scope="col"><span class="solo-lectores">Característica</span></th>${cabecera}</tr></thead><tbody>${cuerpo}<tr><th scope="row">Comprar</th>${compra}</tr></tbody></table>`;
+  }
+  tabla.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-quitar]');
+    if (b) guardarComparar(leerComparar().filter((x) => x !== b.dataset.quitar));
+  });
+  document.addEventListener('cuerda:comparar', pintar);
+  pintar();
+</script>

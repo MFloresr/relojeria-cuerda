@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import Catalogo from '../components/Catalogo.astro';
+import Preguntas from '../components/Preguntas.astro';
+import { getVintage } from '../lib/contenido';
+
+const relojes = await getVintage();
+---
+
+<Base titulo="Relojes vintage y de segunda mano" descripcion="Relojes vintage revisados y regulados por nuestro relojero, con 12 meses de garantía. Cada pieza es única.">
+  <div class="contenedor cabecera-pagina">
+    <h1>Vintage y segunda mano</h1>
+    <p>Piezas únicas con historia. Las desmontamos, las limpiamos y las regulamos antes de venderlas, y se entregan con 12 meses de garantía.</p>
+  </div>
+  <section class="seccion" style="padding-top:16px">
+    <div class="contenedor"><Catalogo relojes={relojes} /></div>
+  </section>
+  <section class="seccion seccion--papel">
+    <div class="contenedor dos dos--desigual" style="align-items:start">
+      <div>
+        <h2>Cómo preparamos cada pieza</h2>
+        <ul class="lista">
+          <li>Desmontaje completo del movimiento y limpieza.</li>
+          <li>Engrase y regulación con control de marcha.</li>
+          <li>Cambio de juntas y prueba de estanqueidad.</li>
+          <li>Correa o brazalete nuevos si hacen falta.</li>
+        </ul>
+        <p class="texto">¿Tienes un reloj antiguo que quieres vender o que no sabes si merece la pena arreglar? <a class="enlace" href="/contacto/?asunto=valoracion">Pide una valoración</a> sin compromiso.</p>
+      </div>
+      <Preguntas tema="vintage" titulo="Sobre el vintage" />
+    </div>
+  </section>
+</Base>

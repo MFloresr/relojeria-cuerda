@@ -1,0 +1,24 @@
+---
+import { sitio } from '../lib/sitio';
+---
+
+<span class="abierto-ahora" data-semana={JSON.stringify(sitio.semana)} role="status">Consultando horario…</span>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.abierto-ahora').forEach((el) => {
+    const semana: Record<string, string[][]> = JSON.parse(el.dataset.semana || '{}');
+    const partes = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Madrid', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date());
+    const dia = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(partes.find((p) => p.type === 'weekday')!.value);
+    const hora = `${partes.find((p) => p.type === 'hour')!.value}:${partes.find((p) => p.type === 'minute')!.value}`;
+    const tramos = semana[String(dia)] ?? [];
+    const dentro = tramos.find(([a, c]) => hora >= a && hora < c);
+    if (dentro) {
+      el.dataset.estado = 'abierto';
+      el.textContent = `Abierto ahora, hasta las ${dentro[1]}`;
+    } else {
+      el.dataset.estado = 'cerrado';
+      const proximo = tramos.find(([a]) => hora < a);
+      el.textContent = proximo ? `Cerrado, abrimos a las ${proximo[0]}` : 'Cerrado ahora';
+    }
+  });
+</script>

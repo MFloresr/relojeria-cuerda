@@ -1,0 +1,31 @@
+{
+  "marca": "Casio",
+  "modelo": "F-91W",
+  "categoria": "digital",
+  "movimiento": "digital",
+  "estado": "nuevo",
+  "diametro": 35,
+  "grosor": 9,
+  "entreasas": 41,
+  "atm": 3,
+  "cristal": "Resina",
+  "caja": "Resina",
+  "correa": "Resina",
+  "anchoCorrea": 18,
+  "peso": 21,
+  "precio": 19.9,
+  "stock": 24,
+  "foto": "../../assets/fotos/casio-f91w.jpg",
+  "fotoAlt": "Casio F-91W digital con pantalla de cristal líquido y caja de resina negra",
+  "destacado": true,
+  "novedad": false,
+  "resumen": "El digital de siempre: ligero, preciso y casi indestructible.",
+  "descripcion": "Un clásico de 1989 que sigue fabricándose igual. Cronómetro, alarma diaria, luz LED y una pila que dura años. Es el reloj que se lleva a diario y se olvida en la muñeca.",
+  "extras": [
+    "Cronómetro y alarma",
+    "Luz LED",
+    "Pila de hasta 7 años",
+    "Calendario automático"
+  ],
+  "garantiaMeses": 36
+}

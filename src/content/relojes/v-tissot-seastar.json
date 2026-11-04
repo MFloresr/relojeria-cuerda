@@ -1,0 +1,31 @@
+{
+  "marca": "Tissot",
+  "modelo": "Seastar Automático (1977)",
+  "categoria": "vestir",
+  "movimiento": "automatico",
+  "estado": "vintage",
+  "diametro": 36,
+  "grosor": 11,
+  "entreasas": 43,
+  "atm": 3,
+  "cristal": "Mineral",
+  "caja": "Chapado en oro",
+  "correa": "Cuero",
+  "anchoCorrea": 18,
+  "peso": 62,
+  "precio": 395,
+  "stock": 1,
+  "foto": "../../assets/fotos/v-tissot-seastar.jpg",
+  "fotoAlt": "Tissot Seastar automático de 1977 con esfera dorada y calendario día-fecha",
+  "destacado": false,
+  "novedad": false,
+  "resumen": "Esfera dorada de los setenta con día y fecha.",
+  "descripcion": "Pieza única de 1977, revisada y regulada en nuestro taller. Caja chapada en oro, movimiento automático y correa de cuero nueva. Se entrega con 12 meses de garantía.",
+  "extras": [
+    "Pieza única",
+    "Revisada en taller",
+    "Correa nueva",
+    "Garantía de 12 meses"
+  ],
+  "garantiaMeses": 12
+}

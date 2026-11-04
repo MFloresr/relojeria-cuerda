@@ -1,0 +1,182 @@
+---
+// Listado con filtros que funcionan en el navegador y se guardan en la dirección (?categoria=buceo&muneca=17).
+import RelojCard from './RelojCard.astro';
+import { ETIQUETA_CATEGORIA, ETIQUETA_MOVIMIENTO, type Reloj } from '../lib/util';
+
+interface Props { relojes: Reloj[]; mostrarEstado?: boolean }
+const { relojes, mostrarEstado = false } = Astro.props;
+const cuenta = (campo: 'categoria' | 'movimiento') => {
+  const m = new Map<string, number>();
+  relojes.forEach((r) => m.set(r.data[campo], (m.get(r.data[campo]) ?? 0) + 1));
+  return [...m.entries()];
+};
+const categorias = cuenta('categoria');
+const movimientos = cuenta('movimiento');
+const marcas = [...new Set(relojes.map((r) => r.data.marca))].sort();
+const maxPrecio = Math.ceil(Math.max(...relojes.map((r) => r.data.precio)) / 50) * 50;
+const maxDiametro = Math.ceil(Math.max(...relojes.map((r) => r.data.diametro)));
+---
+
+<div class="catalogo" id="catalogo">
+  <button type="button" class="btn btn--sec filtros-toggle" aria-expanded="false" aria-controls="filtros">Filtros</button>
+  <form class="filtros" id="filtros" aria-label="Filtros de la tienda" onsubmit="return false">
+    <h2>Filtrar</h2>
+
+    <div class="campo">
+      <label for="f-muneca">Contorno de mi muñeca (cm)</label>
+      <input id="f-muneca" name="muneca" type="number" min="12" max="24" step="0.5" inputmode="decimal" placeholder="Por ejemplo, 17" />
+      <label class="check" style="margin-top:6px"><input type="checkbox" id="f-solo-encaje" />Solo los que me quedan bien</label>
+    </div>
+
+    <fieldset class="campo">
+      <legend>Estilo</legend>
+      {categorias.map(([c, n]) => <label class="check"><input type="checkbox" name="categoria" value={c} />{ETIQUETA_CATEGORIA[c]}<small>{n}</small></label>)}
+    </fieldset>
+
+    <fieldset class="campo">
+      <legend>Movimiento</legend>
+      {movimientos.map(([c, n]) => <label class="check"><input type="checkbox" name="movimiento" value={c} />{ETIQUETA_MOVIMIENTO[c]}<small>{n}</small></label>)}
+    </fieldset>
+
+    <div class="campo">
+      <label for="f-marca">Marca</label>
+      <select id="f-marca" name="marca"><option value="">Todas</option>{marcas.map((m) => <option value={m}>{m}</option>)}</select>
+    </div>
+
+    <div class="campo">
+      <label for="f-agua">Resistencia al agua</label>
+      <select id="f-agua" name="agua">
+        <option value="">Cualquiera</option>
+        <option value="10">Para nadar (10 atm o más)</option>
+        <option value="20">Para bucear (20 atm)</option>
+      </select>
+    </div>
+
+    {mostrarEstado && (
+      <fieldset class="campo">
+        <legend>Estado</legend>
+        <label class="check"><input type="checkbox" name="estado" value="nuevo" />Nuevos</label>
+        <label class="check"><input type="checkbox" name="estado" value="vintage" />Vintage</label>
+      </fieldset>
+    )}
+
+    <div class="campo">
+      <div class="rango"><label for="f-diametro">Diámetro máximo</label><output id="f-diametro-v" class="num" for="f-diametro"></output></div>
+      <input id="f-diametro" name="diam" type="range" min="30" max={maxDiametro} step="1" value={maxDiametro} />
+    </div>
+
+    <div class="campo">
+      <div class="rango"><label for="f-precio">Precio máximo</label><output id="f-precio-v" class="num" for="f-precio"></output></div>
+      <input id="f-precio" name="max" type="range" min="50" max={maxPrecio} step="10" value={maxPrecio} />
+    </div>
+
+    <button type="reset" class="btn btn--sec btn--peq btn--bloque">Quitar filtros</button>
+  </form>
+
+  <div>
+    <div class="barra-resultados">
+      <p id="resultados" role="status" aria-live="polite" style="margin:0;font:500 1.1rem var(--f-titulo)"></p>
+      <div>
+        <label for="f-orden" class="solo-lectores">Ordenar por</label>
+        <select id="f-orden" name="orden">
+          <option value="recomendado">Orden recomendado</option>
+          <option value="precio-asc">Precio: de menor a mayor</option>
+          <option value="precio-desc">Precio: de mayor a menor</option>
+          <option value="diametro-asc">Tamaño: de menor a mayor</option>
+          <option value="diametro-desc">Tamaño: de mayor a menor</option>
+          <option value="novedad">Novedades primero</option>
+        </select>
+      </div>
+    </div>
+    <h2 class="solo-lectores">Listado de relojes</h2>
+    <div class="rejilla" id="lista">
+      {relojes.map((r, i) => <RelojCard reloj={r} prioridad={i < 4} />)}
+    </div>
+    <div class="vacio" id="vacio" hidden>
+      <h3>Ningún reloj con esos filtros</h3>
+      <p>Prueba con un presupuesto mayor o quita algún filtro. Si buscas algo concreto, escríbenos y te lo conseguimos.</p>
+      <a class="btn" href="/contacto/">Encárganos tu reloj</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const raiz = document.getElementById('catalogo');
+  if (raiz) {
+    const form = document.getElementById('filtros') as HTMLFormElement;
+    const lista = document.getElementById('lista')!;
+    const tarjetas = [...lista.querySelectorAll<HTMLElement>('[data-reloj]')];
+    const orden = document.getElementById('f-orden') as HTMLSelectElement;
+    const precio = document.getElementById('f-precio') as HTMLInputElement;
+    const diam = document.getElementById('f-diametro') as HTMLInputElement;
+    const muneca = document.getElementById('f-muneca') as HTMLInputElement;
+    const soloEncaje = document.getElementById('f-solo-encaje') as HTMLInputElement;
+    const resultados = document.getElementById('resultados')!;
+    const vacio = document.getElementById('vacio')!;
+    const nf = new Intl.NumberFormat('es-ES', { useGrouping: 'always' });
+    const marcados = (n: string) => [...form.querySelectorAll<HTMLInputElement>(`input[name="${n}"]:checked`)].map((i) => i.value);
+    const ETIQUETAS: Record<string, string> = { ideal: 'Te queda muy bien', bien: 'Te queda bien', grande: 'Te quedará grande', pequeno: 'Te quedará pequeño' };
+    const calcular = (d: number, c: number) => { const dif = d - 2.35 * c; return Math.abs(dif) <= 2.5 ? 'ideal' : Math.abs(dif) <= 4.5 ? 'bien' : dif > 0 ? 'grande' : 'pequeno'; };
+
+    const q = new URLSearchParams(location.search);
+    q.getAll('categoria').forEach((t) => { const i = form.querySelector<HTMLInputElement>(`input[name="categoria"][value="${t}"]`); if (i) i.checked = true; });
+    q.getAll('movimiento').forEach((t) => { const i = form.querySelector<HTMLInputElement>(`input[name="movimiento"][value="${t}"]`); if (i) i.checked = true; });
+    q.getAll('estado').forEach((t) => { const i = form.querySelector<HTMLInputElement>(`input[name="estado"][value="${t}"]`); if (i) i.checked = true; });
+    if (q.get('marca')) (form.elements.namedItem('marca') as HTMLSelectElement).value = q.get('marca')!;
+    if (q.get('agua')) (form.elements.namedItem('agua') as HTMLSelectElement).value = q.get('agua')!;
+    if (q.get('max')) precio.value = q.get('max')!;
+    if (q.get('diam')) diam.value = q.get('diam')!;
+    if (q.get('muneca')) { muneca.value = q.get('muneca')!; soloEncaje.checked = q.get('encaje') === '1' || (q.has('muneca') && !q.has('encaje') && q.get('desde') === 'buscador'); }
+    if (q.get('muneca') && !q.has('encaje')) soloEncaje.checked = true;
+    if (q.get('orden')) orden.value = q.get('orden')!;
+
+    const aplicar = () => {
+      const cats = marcados('categoria'), movs = marcados('movimiento'), estados = marcados('estado');
+      const marca = (form.elements.namedItem('marca') as HTMLSelectElement).value;
+      const agua = Number((form.elements.namedItem('agua') as HTMLSelectElement).value || 0);
+      const max = Number(precio.value), dmax = Number(diam.value), c = Number(muneca.value);
+      document.getElementById('f-precio-v')!.textContent = `${nf.format(max)} €`;
+      document.getElementById('f-diametro-v')!.textContent = `${dmax} mm`;
+      let visibles = 0;
+      for (const t of tarjetas) {
+        const d = Number(t.dataset.diametro);
+        const e = c ? calcular(d, c) : '';
+        const etiqueta = t.querySelector<HTMLElement>('[data-encaje-etiqueta]')!;
+        if (e) { etiqueta.hidden = false; etiqueta.textContent = ETIQUETAS[e]; etiqueta.dataset.encaje = e; } else etiqueta.hidden = true;
+        const ok =
+          (!cats.length || cats.includes(t.dataset.categoria!)) &&
+          (!movs.length || movs.includes(t.dataset.movimiento!)) &&
+          (!estados.length || estados.includes(t.dataset.estado!)) &&
+          (!marca || t.dataset.marca === marca) &&
+          Number(t.dataset.atm) >= agua &&
+          d <= dmax && Number(t.dataset.precio) <= max &&
+          (!(soloEncaje.checked && c) || e === 'ideal' || e === 'bien');
+        t.hidden = !ok;
+        if (ok) visibles++;
+      }
+      const k = orden.value;
+      const val = (t: HTMLElement) => Number(k.startsWith('precio') ? t.dataset.precio : k.startsWith('diametro') ? t.dataset.diametro : t.dataset.novedad);
+      if (k !== 'recomendado') [...tarjetas].sort((a, b) => (k.endsWith('desc') || k === 'novedad' ? val(b) - val(a) : val(a) - val(b))).forEach((t) => lista.appendChild(t));
+      else tarjetas.forEach((t) => lista.appendChild(t));
+      resultados.textContent = visibles === 1 ? '1 reloj' : `${visibles} relojes`;
+      vacio.hidden = visibles !== 0;
+      const p = new URLSearchParams();
+      cats.forEach((t) => p.append('categoria', t)); movs.forEach((t) => p.append('movimiento', t)); estados.forEach((t) => p.append('estado', t));
+      if (marca) p.set('marca', marca); if (agua) p.set('agua', String(agua));
+      if (c) { p.set('muneca', String(c)); p.set('encaje', soloEncaje.checked ? '1' : '0'); }
+      if (max < Number(precio.max)) p.set('max', String(max)); if (dmax < Number(diam.max)) p.set('diam', String(dmax));
+      if (k !== 'recomendado') p.set('orden', k);
+      history.replaceState(null, '', p.toString() ? `?${p}` : location.pathname);
+    };
+    form.addEventListener('input', aplicar);
+    form.addEventListener('reset', () => setTimeout(aplicar));
+    orden.addEventListener('change', aplicar);
+    const toggle = raiz.querySelector<HTMLButtonElement>('.filtros-toggle')!;
+    const movil = window.matchMedia('(max-width: 959px)');
+    const ajustar = () => { form.hidden = movil.matches && toggle.getAttribute('aria-expanded') !== 'true'; };
+    toggle.addEventListener('click', () => { toggle.setAttribute('aria-expanded', String(toggle.getAttribute('aria-expanded') !== 'true')); ajustar(); });
+    movil.addEventListener('change', ajustar);
+    ajustar();
+    aplicar();
+  }
+</script>

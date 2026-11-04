@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getEntradas } from '../../lib/contenido';
+import { sitio } from '../../lib/sitio';
+
+export async function getStaticPaths() {
+  const entradas = await getEntradas();
+  return entradas.map((entrada) => ({ params: { slug: entrada.id }, props: { entrada } }));
+}
+const { entrada } = Astro.props;
+const { Content } = await render(entrada);
+const d = entrada.data;
+const fecha = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }).format(d.fecha);
+const jsonld = { '@context': 'https://schema.org', '@type': 'Article', headline: d.titulo, description: d.resumen, datePublished: d.fecha.toISOString(), author: { '@type': 'Organization', name: sitio.nombre } };
+---
+
+<Base titulo={d.titulo} descripcion={d.resumen} jsonld={jsonld}>
+  <div class="contenedor">
+    <nav class="migas" aria-label="Migas de pan"><a href="/">Inicio</a> / <a href="/blog/">Blog</a> / <span aria-current="page">{d.titulo}</span></nav>
+    <header class="cabecera-pagina" style="padding-bottom:0">
+      <p class="gris" style="margin-bottom:8px;font-family:var(--f-titulo)">{d.categoria} · {fecha} · {d.minutos} min de lectura</p>
+      <h1 style="max-width:18ch">{d.titulo}</h1>
+      <p>{d.resumen}</p>
+    </header>
+    <div class="foto-recta" style="margin-top:24px;max-height:520px"><Image src={d.foto} alt={d.fotoAlt} widths={[700, 1100, 1600]} sizes="(min-width: 1240px) 1160px, 100vw" loading="eager" /></div>
+    <article class="seccion prosa"><Content /></article>
+    <p style="padding-bottom:64px"><a class="btn btn--sec" href="/blog/">Volver al blog</a></p>
+  </div>
+</Base>

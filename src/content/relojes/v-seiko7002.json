@@ -1,0 +1,31 @@
+{
+  "marca": "Seiko",
+  "modelo": "Diver 7002 (años 80)",
+  "categoria": "buceo",
+  "movimiento": "automatico",
+  "estado": "vintage",
+  "diametro": 42,
+  "grosor": 13,
+  "entreasas": 50,
+  "atm": 20,
+  "cristal": "Mineral",
+  "caja": "Acero",
+  "correa": "Nylon",
+  "anchoCorrea": 20,
+  "peso": 150,
+  "precio": 329,
+  "stock": 1,
+  "foto": "../../assets/fotos/v-seiko7002.jpg",
+  "fotoAlt": "Seiko 7002 de buceo de los años ochenta con correa de nylon de cuatro anillas",
+  "destacado": false,
+  "novedad": false,
+  "resumen": "Buceador de los ochenta, con la pátina de los años.",
+  "descripcion": "Un clásico del coleccionismo: caja de acero con bisel de buceo y correa de nylon. Funcionando bien tras una revisión completa.",
+  "extras": [
+    "Pieza única",
+    "Revisión completa",
+    "Correa de nylon",
+    "Garantía de 12 meses"
+  ],
+  "garantiaMeses": 12
+}

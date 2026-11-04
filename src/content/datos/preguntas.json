@@ -1,0 +1,10 @@
+[
+  { "id": "q1", "tema": "compra", "pregunta": "¿Cómo sé qué tamaño de reloj me queda bien?", "respuesta": "Mide el contorno de tu muñeca y usa nuestra guía de tallas: te dice qué diámetro de caja te sienta mejor. En la tienda te lo probamos con calma." },
+  { "id": "q2", "tema": "compra", "pregunta": "¿Qué diferencia hay entre automático, cuarzo y solar?", "respuesta": "El automático funciona con un mecanismo que se carga con el movimiento de la muñeca; el cuarzo, con una pila; y el solar, con la luz. Los tres son fiables: cambia el mantenimiento y el carácter del reloj." },
+  { "id": "q3", "tema": "envios", "pregunta": "¿Cuánto tardan en llegar los pedidos?", "respuesta": "Entre 2 y 4 días laborables en envío estándar y en 24 horas con el envío exprés. El estándar es gratuito a partir de 60 € de compra." },
+  { "id": "q4", "tema": "envios", "pregunta": "¿Puedo devolver un reloj?", "respuesta": "Sí, tienes 14 días desde que lo recibes para desistir de la compra, sin dar explicaciones. El reloj debe estar sin usar, con sus precintos y en su caja." },
+  { "id": "q5", "tema": "garantia", "pregunta": "¿Qué garantía tienen los relojes nuevos?", "respuesta": "Tres años de garantía legal en productos nuevos. Si algo falla por un defecto de fabricación, lo reparamos o lo cambiamos." },
+  { "id": "q6", "tema": "vintage", "pregunta": "¿Qué garantía tienen los vintage y de segunda mano?", "respuesta": "Doce meses. Todos pasan por el taller: los desmontamos, los revisamos y los regulamos antes de ponerlos a la venta." },
+  { "id": "q7", "tema": "vintage", "pregunta": "¿Por qué solo hay una unidad de cada vintage?", "respuesta": "Porque cada pieza es única: tiene su año, su desgaste y su historia. Cuando se vende, se vende." },
+  { "id": "q8", "tema": "taller", "pregunta": "¿Cada cuánto debo revisar un reloj automático?", "respuesta": "Como orientación, cada cinco a siete años. Si notas que se adelanta, se atrasa o se para, no esperes a esa fecha." }
+]

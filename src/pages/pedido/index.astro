@@ -1,0 +1,153 @@
+---
+import Base from '../../layouts/Base.astro';
+import { sitio } from '../../lib/sitio';
+---
+
+<Base titulo="Finalizar la compra" descripcion="Datos de envío y forma de pago de tu pedido." noindex>
+  <div class="contenedor cabecera-pagina"><h1>Finalizar la compra</h1></div>
+  <section class="seccion" style="padding-top:16px">
+    <div class="contenedor">
+      <div id="pedido-vacio" class="vacio" hidden>
+        <h2 style="font-size:2rem">No hay nada que comprar todavía</h2>
+        <p>Añade un reloj al carrito para continuar.</p>
+        <a class="btn" href="/tienda/">Ver la tienda</a>
+      </div>
+
+      <div class="carrito" id="pedido" data-gratis={sitio.envio.gratisDesde} data-estandar={sitio.envio.estandar} data-express={sitio.envio.express} data-endpoint={sitio.endpointFormularios} hidden>
+        <form class="formulario" id="form-pedido" novalidate>
+          <p class="aviso aviso--demo" style="margin:0 0 20px">Modo demostración: no se cobra nada y no se piden datos de tarjeta. El pago real se conectaría con una pasarela como Stripe.</p>
+          <div class="rejilla-campos">
+            <h2 class="ancho-total" style="font-size:1.6rem;margin:0">Tus datos</h2>
+            <div><label for="p-nombre">Nombre y apellidos <span class="marca" aria-hidden="true">*</span></label><input id="p-nombre" name="nombre" type="text" autocomplete="name" required /><p class="error" data-error-para="nombre"></p></div>
+            <div><label for="p-email">Correo <span class="marca" aria-hidden="true">*</span></label><input id="p-email" name="email" type="email" autocomplete="email" required /><p class="error" data-error-para="email"></p></div>
+            <div><label for="p-tel">Teléfono <span class="marca" aria-hidden="true">*</span></label><input id="p-tel" name="telefono" type="tel" autocomplete="tel" required pattern="[0-9 +]{9,}" title="Escribe un teléfono de al menos 9 cifras" /><p class="error" data-error-para="telefono"></p></div>
+            <div></div>
+            <h2 class="ancho-total" style="font-size:1.6rem;margin:12px 0 0">Dirección de envío</h2>
+            <div class="ancho-total"><label for="p-dir">Dirección <span class="marca" aria-hidden="true">*</span></label><input id="p-dir" name="direccion" type="text" autocomplete="street-address" required /><p class="error" data-error-para="direccion"></p></div>
+            <div><label for="p-cp">Código postal <span class="marca" aria-hidden="true">*</span></label><input id="p-cp" name="cp" type="text" inputmode="numeric" autocomplete="postal-code" required pattern="[0-9]{5}" title="El código postal tiene 5 cifras" /><p class="error" data-error-para="cp"></p></div>
+            <div><label for="p-ciudad">Población <span class="marca" aria-hidden="true">*</span></label><input id="p-ciudad" name="ciudad" type="text" autocomplete="address-level2" required /><p class="error" data-error-para="ciudad"></p></div>
+
+            <fieldset class="ancho-total campo" style="margin:12px 0 0">
+              <legend style="font:500 1.6rem var(--f-titulo);margin-bottom:10px">Envío</legend>
+              <div class="opciones">
+                <label class="opcion"><input type="radio" name="envio" value="estandar" checked /><span><strong>Estándar</strong><small>{sitio.envio.plazoEstandar}</small></span><span class="precio-opcion" data-precio-estandar></span></label>
+                <label class="opcion"><input type="radio" name="envio" value="express" /><span><strong>Exprés</strong><small>{sitio.envio.plazoExpress}</small></span><span class="precio-opcion" data-precio-express></span></label>
+                <label class="opcion"><input type="radio" name="envio" value="tienda" /><span><strong>Recoger en la tienda</strong><small>{sitio.direccion.calle}, {sitio.direccion.ciudad}</small></span><span class="precio-opcion">Gratis</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset class="ancho-total campo" style="margin:12px 0 0">
+              <legend style="font:500 1.6rem var(--f-titulo);margin-bottom:10px">Pago</legend>
+              <div class="opciones">
+                <label class="opcion"><input type="radio" name="pago" value="tarjeta" checked /><span><strong>Tarjeta</strong><small>Se pagaría en una pasarela segura, sin pasar por esta web.</small></span></label>
+                <label class="opcion"><input type="radio" name="pago" value="transferencia" /><span><strong>Transferencia</strong><small>Te enviamos los datos por correo y reservamos el reloj 48 horas.</small></span></label>
+                <label class="opcion"><input type="radio" name="pago" value="tienda" /><span><strong>Pagar al recogerlo</strong><small>Solo si eliges recoger en la tienda.</small></span></label>
+              </div>
+            </fieldset>
+
+            <div class="ancho-total" style="margin-top:12px">
+              <label class="casilla"><input type="checkbox" name="condiciones" required /><span>He leído las <a href="/condiciones-de-venta/">condiciones de venta</a> y la <a href="/privacidad/">política de privacidad</a>.</span></label>
+              <p class="error" data-error-para="condiciones"></p>
+            </div>
+            <div class="honeypot" aria-hidden="true"><label>No rellenes este campo <input type="text" name="web" tabindex="-1" autocomplete="off" /></label></div>
+            <div class="ancho-total"><button class="btn btn--rojo" type="submit" id="p-enviar">Confirmar el pedido</button><div role="status" aria-live="polite" id="p-estado"></div></div>
+          </div>
+        </form>
+
+        <aside class="resumen" aria-labelledby="t-resumen-pedido">
+          <h2 id="t-resumen-pedido">Tu pedido</h2>
+          <div id="p-lineas"></div>
+          <dl style="margin-top:12px">
+            <div><dt>Subtotal</dt><dd id="p-subtotal"></dd></div>
+            <div><dt>Envío</dt><dd id="p-envio"></dd></div>
+            <div class="total"><dt>Total</dt><dd id="p-total"></dd></div>
+          </dl>
+          <p class="letra-pequena">IVA ({sitio.iva} %) incluido. Tienes 14 días para desistir de la compra.</p>
+          <p style="margin:0"><a class="enlace" href="/carrito/">Volver al carrito</a></p>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { cargarCatalogo, formatoEuros, guardarCarrito, leerCarrito, type Resumen } from '../../lib/carrito';
+
+  const caja = document.getElementById('pedido')!;
+  const vacio = document.getElementById('pedido-vacio')!;
+  const form = document.getElementById('form-pedido') as HTMLFormElement;
+  const estado = document.getElementById('p-estado')!;
+  const gratis = Number(caja.dataset.gratis), estandar = Number(caja.dataset.estandar), express = Number(caja.dataset.express);
+  let mapa = new Map<string, Resumen>();
+  let total = 0;
+
+  const envioElegido = () => (form.querySelector<HTMLInputElement>('input[name="envio"]:checked')?.value ?? 'estandar');
+  const subtotal = () => leerCarrito().reduce((s, l) => s + (mapa.get(l.id)?.precio ?? 0) * l.cantidad, 0);
+  const costeEnvio = (sub: number) => { const e = envioElegido(); return e === 'tienda' ? 0 : e === 'express' ? express : sub >= gratis ? 0 : estandar; };
+
+  function resumen() {
+    const sub = subtotal(), envio = costeEnvio(sub);
+    total = sub + envio;
+    document.getElementById('p-lineas')!.innerHTML = leerCarrito().filter((l) => mapa.has(l.id)).map((l) => {
+      const r = mapa.get(l.id)!;
+      return `<div style="display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--linea)"><img src="${r.foto}" alt="" width="56" height="56" style="width:56px;height:56px;object-fit:contain;background:#fff;border:1px solid var(--linea);border-radius:4px" /><div style="flex:1;font:400 1rem var(--f-titulo)">${r.nombre}<br /><span class="gris">× ${l.cantidad}</span></div><strong class="num" style="font:500 1.05rem var(--f-titulo)">${formatoEuros(r.precio * l.cantidad)}</strong></div>`;
+    }).join('');
+    document.getElementById('p-subtotal')!.textContent = formatoEuros(sub);
+    document.getElementById('p-envio')!.textContent = envio === 0 ? 'Gratis' : formatoEuros(envio);
+    document.getElementById('p-total')!.textContent = formatoEuros(total);
+    document.querySelector('[data-precio-estandar]')!.textContent = sub >= gratis ? 'Gratis' : formatoEuros(estandar);
+    document.querySelector('[data-precio-express]')!.textContent = formatoEuros(express);
+  }
+
+  (async () => {
+    const catalogo = await cargarCatalogo();
+    mapa = new Map(catalogo.map((r) => [r.id, r]));
+    if (!leerCarrito().some((l) => mapa.has(l.id))) { vacio.hidden = false; return; }
+    caja.hidden = false; resumen();
+  })();
+  form.addEventListener('change', resumen);
+
+  const campos = () => [...form.querySelectorAll<HTMLInputElement>('input[required]')];
+  const mensaje = (c: HTMLInputElement) => {
+    if (c.validity.valueMissing) return c.type === 'checkbox' ? 'Necesitamos que aceptes las condiciones.' : 'Este campo es obligatorio.';
+    if (c.validity.typeMismatch) return 'Escribe un correo válido, por ejemplo nombre@correo.com.';
+    if (c.validity.patternMismatch) return c.title || 'El formato no es válido.';
+    return '';
+  };
+  const validar = (c: HTMLInputElement) => {
+    const m = mensaje(c);
+    const e = form.querySelector<HTMLElement>(`[data-error-para="${c.name}"]`);
+    if (e) e.textContent = m;
+    c.setAttribute('aria-invalid', m ? 'true' : 'false');
+    return !m;
+  };
+  campos().forEach((c) => c.addEventListener('blur', () => validar(c)));
+
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    estado.innerHTML = '';
+    const ok = campos().map(validar);
+    if (ok.includes(false)) { campos().find((c) => c.getAttribute('aria-invalid') === 'true')?.focus(); return; }
+    const datos = Object.fromEntries(new FormData(form).entries());
+    if (datos.web) return;
+    delete datos.web;
+    const boton = document.getElementById('p-enviar') as HTMLButtonElement;
+    boton.disabled = true; boton.textContent = 'Enviando…';
+    const numero = `C-${new Date().toISOString().slice(2, 10).replace(/-/g, '')}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    const lineas = leerCarrito().filter((l) => mapa.has(l.id));
+    const pedido = { numero, total, envio: envioElegido(), pago: datos.pago, nombre: datos.nombre, lineas: lineas.map((l) => ({ nombre: mapa.get(l.id)!.nombre, cantidad: l.cantidad, precio: mapa.get(l.id)!.precio })) };
+    try {
+      const url = caja.dataset.endpoint;
+      if (url) {
+        const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: 'pedido', ...datos, ...pedido }) });
+        if (!r.ok) throw new Error(String(r.status));
+      }
+      try { sessionStorage.setItem('cuerda:pedido', JSON.stringify(pedido)); } catch { /* sin almacenamiento */ }
+      guardarCarrito([]);
+      location.href = '/pedido/gracias/';
+    } catch {
+      estado.innerHTML = '<p class="aviso aviso--error">No hemos podido enviar el pedido. Inténtalo de nuevo o llámanos al teléfono de contacto.</p>';
+      boton.disabled = false; boton.textContent = 'Confirmar el pedido';
+    }
+  });
+</script>

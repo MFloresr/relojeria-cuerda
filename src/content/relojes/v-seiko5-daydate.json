@@ -1,0 +1,31 @@
+{
+  "marca": "Seiko",
+  "modelo": "5 Día-Fecha (vintage)",
+  "categoria": "diario",
+  "movimiento": "automatico",
+  "estado": "vintage",
+  "diametro": 37,
+  "grosor": 12,
+  "entreasas": 44,
+  "atm": 3,
+  "cristal": "Hardlex",
+  "caja": "Acero",
+  "correa": "Cuero",
+  "anchoCorrea": 18,
+  "peso": 70,
+  "precio": 169,
+  "stock": 1,
+  "foto": "../../assets/fotos/v-seiko5-daydate.jpg",
+  "fotoAlt": "Seiko 5 automático vintage con esfera gris y calendario día-fecha sobre un soporte",
+  "destacado": false,
+  "novedad": false,
+  "resumen": "El clásico de siempre: automático, con día y fecha.",
+  "descripcion": "Un Seiko 5 de los de toda la vida: caja de acero, esfera gris con calendario y movimiento automático revisado. Correa de cuero nueva.",
+  "extras": [
+    "Pieza única",
+    "Revisado en taller",
+    "Correa nueva",
+    "Garantía de 12 meses"
+  ],
+  "garantiaMeses": 12
+}

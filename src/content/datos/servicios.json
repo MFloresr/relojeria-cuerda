@@ -1,0 +1,8 @@
+[
+  { "id": "pila", "nombre": "Cambio de pila", "descripcion": "Pila nueva de calidad y comprobación de la hermeticidad. Te lo hacemos mientras esperas.", "desde": 8, "plazo": "15 minutos", "incluye": ["Pila nueva", "Junta comprobada", "Prueba de estanqueidad"] },
+  { "id": "correa", "nombre": "Cambio de correa o brazalete", "descripcion": "Montamos la correa que elijas y ajustamos el brazalete a tu muñeca. Si la traes tú, también la ponemos.", "desde": 6, "plazo": "10 minutos", "incluye": ["Montaje", "Ajuste de eslabones", "Barritas nuevas si hacen falta"] },
+  { "id": "revision", "nombre": "Revisión de reloj automático", "descripcion": "Limpieza, engrase y regulación del movimiento. Recomendable cada cinco o siete años.", "desde": 120, "plazo": "2 a 3 semanas", "incluye": ["Desmontaje completo", "Limpieza y engrase", "Regulación y control de marcha", "Garantía de 12 meses"] },
+  { "id": "estanqueidad", "nombre": "Prueba de estanqueidad", "descripcion": "Medimos si tu reloj aguanta el agua que dice aguantar y cambiamos las juntas si hace falta.", "desde": 15, "plazo": "30 minutos", "incluye": ["Prueba a presión", "Informe", "Juntas nuevas (según modelo)"] },
+  { "id": "cristal", "nombre": "Cambio de cristal", "descripcion": "Sustituimos cristales rayados o rotos, de mineral, acrílico o zafiro.", "desde": 35, "plazo": "3 a 7 días", "incluye": ["Cristal nuevo", "Junta nueva", "Prueba de estanqueidad"] },
+  { "id": "pulido", "nombre": "Pulido y limpieza", "descripcion": "Quitamos arañazos superficiales de la caja y el brazalete y lo dejamos limpio por dentro y por fuera.", "desde": 25, "plazo": "2 a 4 días", "incluye": ["Limpieza ultrasónica", "Pulido de caja y brazalete", "Entrega en bolsa protegida"] }
+]

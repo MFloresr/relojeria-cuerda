@@ -1,0 +1,99 @@
+---
+import Base from '../layouts/Base.astro';
+import { sitio } from '../lib/sitio';
+---
+
+<Base titulo="Carrito" descripcion="Revisa los relojes de tu carrito antes de finalizar la compra." noindex>
+  <div class="contenedor cabecera-pagina"><h1>Tu carrito</h1></div>
+  <section class="seccion" style="padding-top:16px">
+    <div class="contenedor">
+      <div id="carrito-vacio" class="vacio" hidden>
+        <h2 style="font-size:2rem">Tu carrito está vacío</h2>
+        <p>Cuando añadas un reloj, lo verás aquí.</p>
+        <a class="btn" href="/tienda/">Ver la tienda</a>
+      </div>
+      <div class="carrito" id="carrito" data-gratis={sitio.envio.gratisDesde} data-envio={sitio.envio.estandar} hidden>
+        <div>
+          <h2 class="solo-lectores">Relojes en el carrito</h2>
+          <div id="lineas"></div>
+          <p style="margin-top:20px"><a class="enlace" href="/tienda/">Seguir comprando</a></p>
+        </div>
+        <aside class="resumen" aria-labelledby="t-resumen">
+          <h2 id="t-resumen">Resumen</h2>
+          <p class="letra-pequena" id="envio-texto" style="margin-bottom:0"></p>
+          <div class="barra-envio" aria-hidden="true"><span id="envio-barra"></span></div>
+          <dl>
+            <div><dt>Subtotal</dt><dd id="r-subtotal"></dd></div>
+            <div><dt>Envío estándar</dt><dd id="r-envio"></dd></div>
+            <div class="total"><dt>Total</dt><dd id="r-total"></dd></div>
+          </dl>
+          <p class="letra-pequena">IVA ({sitio.iva} %) incluido en los precios.</p>
+          <a class="btn btn--rojo btn--bloque" href="/pedido/">Finalizar la compra</a>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { cargarCatalogo, formatoEuros, guardarCarrito, leerCarrito, type Linea, type Resumen } from '../lib/carrito';
+
+  const caja = document.getElementById('carrito')!;
+  const vacio = document.getElementById('carrito-vacio')!;
+  const lineasEl = document.getElementById('lineas')!;
+  const gratis = Number(caja.dataset.gratis), envioPrecio = Number(caja.dataset.envio);
+
+  async function pintar() {
+    const catalogo = await cargarCatalogo();
+    const mapa = new Map<string, Resumen>(catalogo.map((r) => [r.id, r]));
+    let lineas = leerCarrito().filter((l) => mapa.has(l.id));
+    // Ajusta cantidades al stock disponible
+    lineas = lineas.map((l) => ({ ...l, cantidad: Math.min(l.cantidad, mapa.get(l.id)!.stock) })).filter((l) => l.cantidad > 0);
+    if (JSON.stringify(lineas) !== JSON.stringify(leerCarrito())) guardarCarrito(lineas);
+    if (!lineas.length) { caja.hidden = true; vacio.hidden = false; return; }
+    vacio.hidden = true; caja.hidden = false;
+
+    lineasEl.innerHTML = lineas.map((l) => {
+      const r = mapa.get(l.id)!;
+      return `<article class="linea-carrito" data-id="${r.id}">
+        <img src="${r.foto}" alt="${r.fotoAlt.replace(/"/g, '&quot;')}" width="110" height="110" />
+        <div>
+          <h3><a href="/tienda/${r.id}/" style="text-decoration:none">${r.nombre}</a></h3>
+          <p class="meta">${r.estado === 'vintage' ? 'Vintage, pieza única' : r.categoria} · ${r.diametro} mm</p>
+          <div class="cantidad" role="group" aria-label="Cantidad de ${r.nombre}">
+            <button type="button" data-menos aria-label="Quitar una unidad">–</button>
+            <output aria-live="polite">${l.cantidad}</output>
+            <button type="button" data-mas aria-label="Añadir una unidad" ${l.cantidad >= r.stock ? 'disabled' : ''}>+</button>
+          </div>
+          <button type="button" class="quitar" data-quitar>Quitar</button>
+        </div>
+        <p class="linea-carrito__precio num">${formatoEuros(r.precio * l.cantidad)}</p>
+      </article>`;
+    }).join('');
+
+    const subtotal = lineas.reduce((s, l) => s + mapa.get(l.id)!.precio * l.cantidad, 0);
+    const envio = subtotal >= gratis ? 0 : envioPrecio;
+    document.getElementById('r-subtotal')!.textContent = formatoEuros(subtotal);
+    document.getElementById('r-envio')!.textContent = envio === 0 ? 'Gratis' : formatoEuros(envio);
+    document.getElementById('r-total')!.textContent = formatoEuros(subtotal + envio);
+    document.getElementById('envio-texto')!.textContent = envio === 0 ? 'Tu pedido tiene el envío gratis.' : `Te faltan ${formatoEuros(gratis - subtotal)} para el envío gratis.`;
+    (document.getElementById('envio-barra') as HTMLElement).style.width = `${Math.min(100, (subtotal / gratis) * 100)}%`;
+  }
+
+  lineasEl.addEventListener('click', async (e) => {
+    const b = (e.target as HTMLElement).closest('button');
+    const fila = (e.target as HTMLElement).closest<HTMLElement>('[data-id]');
+    if (!b || !fila) return;
+    const id = fila.dataset.id!;
+    let lineas: Linea[] = leerCarrito();
+    const l = lineas.find((x) => x.id === id);
+    if (!l) return;
+    if (b.hasAttribute('data-mas')) l.cantidad += 1;
+    else if (b.hasAttribute('data-menos')) l.cantidad -= 1;
+    else if (b.hasAttribute('data-quitar')) l.cantidad = 0;
+    lineas = lineas.filter((x) => x.cantidad > 0);
+    guardarCarrito(lineas);
+    await pintar();
+  });
+  pintar();
+</script>

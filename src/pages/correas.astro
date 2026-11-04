@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { getServicios } from '../lib/contenido';
+import { euros } from '../lib/util';
+import alligator from '../assets/fotos/correa-alligator.jpg';
+import bund from '../assets/fotos/correa-bund.jpg';
+
+const servicios = (await getServicios()).filter((s) => ['pila', 'correa'].includes(s.id));
+const materiales = [
+  ['Cuero', 'Elegante y cómodo. Se arruga con el tiempo, y no le sientan bien el agua ni el sudor.', 'Vestir y uso diario'],
+  ['Acero (brazalete)', 'Muy resistente y fácil de limpiar. Pesa más y hay que ajustarlo con eslabones.', 'Uso diario y buceo'],
+  ['Nylon (NATO o zulú)', 'Ligero, barato y se seca rápido. Se cambia en un minuto sin herramientas.', 'Verano, campo y deporte'],
+  ['Silicona', 'Cómoda y a prueba de agua y sudor. Ideal para entrenar.', 'Deporte y playa'],
+];
+---
+
+<Base titulo="Correas, brazaletes y pilas" descripcion="Cambio de correa, ajuste de brazalete y cambio de pila en el momento. Te ayudamos a elegir el ancho y el material.">
+  <div class="contenedor cabecera-pagina">
+    <h1>Correas y pilas</h1>
+    <p>Cambiar la correa renueva un reloj. Y cambiar la pila a tiempo evita que se estropee por dentro. Te lo hacemos en el acto.</p>
+  </div>
+
+  <section class="seccion" style="padding-top:24px">
+    <div class="contenedor dos dos--desigual" style="align-items:start">
+      <div>
+        <h2 class="solo-lectores">Servicios</h2>
+        <div class="servicios">
+          {servicios.map((s) => (
+            <article class="servicio">
+              <h3>{s.data.nombre}</h3>
+              <p>{s.data.descripcion}</p>
+              <ul class="lista">{s.data.incluye.map((i) => <li>{i}</li>)}</ul>
+              <div class="servicio__precio"><span class="gris">{s.data.plazo}</span><strong class="num">Desde {euros(s.data.desde)}</strong></div>
+            </article>
+          ))}
+        </div>
+        <p style="margin-top:24px"><a class="btn" href="/taller/#cita">Pedir cita</a> <a class="enlace" style="margin-left:16px" href="/contacto/">O pásate sin cita</a></p>
+      </div>
+      <div class="foto-recta"><Image src={alligator} alt="Correa de cuero marrón con textura de cocodrilo" widths={[500, 800]} sizes="(min-width: 900px) 40vw, 100vw" /></div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--papel" aria-labelledby="t-materiales">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="t-materiales">Qué material elegir</h2><p>Depende de dónde y cómo lo lleves.</p></div>
+      <div class="tabla-envoltorio">
+        <table>
+          <caption class="solo-lectores">Materiales de correa: características y uso recomendado</caption>
+          <thead><tr><th scope="col">Material</th><th scope="col">Cómo es</th><th scope="col">Para qué</th></tr></thead>
+          <tbody>{materiales.map(([a, b, c]) => <tr><th scope="row">{a}</th><td>{b}</td><td>{c}</td></tr>)}</tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="contenedor dos">
+      <div class="foto-recta"><Image src={bund} alt="Reloj de esfera negra con correa de cuero oscuro, sobre una superficie de piel" widths={[500, 800]} sizes="(min-width: 900px) 45vw, 100vw" /></div>
+      <div>
+        <h2>El ancho de la correa</h2>
+        <p class="texto">Se mide entre las asas del reloj, en milímetros, y casi siempre es un número par: 18, 20, 22 o 24. Si no lo sabes, tráenos el reloj y lo medimos en un momento.</p>
+        <ul class="lista">
+          <li>Cajas pequeñas (hasta 36 mm): correas de 16 a 18 mm.</li>
+          <li>Cajas medianas (37 a 41 mm): de 18 a 20 mm.</li>
+          <li>Cajas grandes (más de 42 mm): de 22 mm o más.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</Base>

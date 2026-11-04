@@ -1,0 +1,32 @@
+{
+  "marca": "Seiko",
+  "modelo": "Prospex SPB143",
+  "categoria": "buceo",
+  "movimiento": "automatico",
+  "estado": "nuevo",
+  "diametro": 40,
+  "grosor": 13,
+  "entreasas": 47,
+  "atm": 20,
+  "cristal": "Zafiro",
+  "caja": "Acero",
+  "correa": "Acero",
+  "anchoCorrea": 20,
+  "peso": 165,
+  "precio": 1049,
+  "stock": 3,
+  "foto": "../../assets/fotos/seiko-spb143.jpg",
+  "fotoAlt": "Seiko Prospex SPB143 de buceo con bisel negro y brazalete de acero en una muñeca",
+  "destacado": true,
+  "novedad": true,
+  "resumen": "El buceador clásico, en un tamaño que le sienta bien a casi todos.",
+  "descripcion": "Reedición de un diseño de los años sesenta: 40 mm, cristal de zafiro, hermético a 200 metros y movimiento automático. Se lleva igual de bien con una camisa que con un neopreno.",
+  "extras": [
+    "Cristal de zafiro",
+    "Hermético 200 m",
+    "Bisel giratorio",
+    "Movimiento automático"
+  ],
+  "garantiaMeses": 36,
+  "ajuste": "cover"
+}

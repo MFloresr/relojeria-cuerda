@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+import Cabecera from '../components/Cabecera.astro';
+import Pie from '../components/Pie.astro';
+import Utilidades from '../components/Utilidades.astro';
+import { sitio } from '../lib/sitio';
+
+interface Props {
+  titulo: string;
+  descripcion?: string;
+  imagen?: string;
+  jsonld?: object | object[];
+  noindex?: boolean;
+}
+const { titulo, descripcion = sitio.descripcion, imagen, jsonld, noindex = false } = Astro.props;
+const canonica = new URL(Astro.url.pathname, Astro.site).href;
+const tituloCompleto = titulo.includes(sitio.nombre) ? titulo : `${titulo} | ${sitio.nombre}`;
+const og = imagen ? new URL(imagen, Astro.site).href : undefined;
+const datos = jsonld ? (Array.isArray(jsonld) ? jsonld : [jsonld]) : [];
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{tituloCompleto}</title>
+    <meta name="description" content={descripcion} />
+    <link rel="canonical" href={canonica} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#f8f9fa" />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content={sitio.nombre} />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonica} />
+    {og && <meta property="og:image" content={og} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    {datos.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+  </head>
+  <body>
+    <a class="salto" href="#contenido">Saltar al contenido</a>
+    <Cabecera ruta={Astro.url.pathname} />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Pie />
+    <Utilidades />
+  </body>
+</html>

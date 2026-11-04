@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/Base.astro';
+import { sitio } from '../../lib/sitio';
+---
+
+<Base titulo="Pedido recibido" descripcion="Confirmación de tu pedido." noindex>
+  <div class="contenedor cabecera-pagina"><h1 id="g-titulo">Gracias por tu pedido</h1></div>
+  <section class="seccion" style="padding-top:16px">
+    <div class="contenedor" style="max-width:760px">
+      <div id="g-pedido" hidden>
+        <p class="aviso aviso--demo">Modo demostración: este pedido no se ha cobrado ni se ha enviado a ninguna tienda real.</p>
+        <p style="font-size:1.4rem">Tu número de pedido es <strong class="num" id="g-numero" style="font-family:var(--f-titulo)"></strong>.</p>
+        <p id="g-texto" class="texto"></p>
+        <div class="tabla-envoltorio" style="margin:24px 0">
+          <table>
+            <caption class="solo-lectores">Relojes del pedido</caption>
+            <thead><tr><th scope="col">Reloj</th><th scope="col" class="num">Cantidad</th><th scope="col" class="num">Importe</th></tr></thead>
+            <tbody id="g-lineas"></tbody>
+          </table>
+        </div>
+        <p style="font:500 1.4rem var(--f-titulo)">Total: <span class="num" id="g-total"></span> <span class="letra-pequena">(IVA incluido)</span></p>
+      </div>
+      <div id="g-nada" class="vacio" hidden>
+        <h2 style="font-size:2rem">No hay ningún pedido reciente</h2>
+        <p>Si acabas de comprar, revisa tu correo. Si no, empieza por la tienda.</p>
+        <a class="btn" href="/tienda/">Ver la tienda</a>
+      </div>
+      <p style="margin-top:28px"><a class="btn btn--sec" href="/">Volver al inicio</a> <a class="enlace" style="margin-left:16px" href="/contacto/">¿Dudas? Escríbenos</a></p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { formatoEuros } from '../../lib/carrito';
+  let pedido: { numero: string; total: number; envio: string; pago: string; nombre: string; lineas: { nombre: string; cantidad: number; precio: number }[] } | null = null;
+  try { const v = sessionStorage.getItem('cuerda:pedido'); pedido = v ? JSON.parse(v) : null; } catch { pedido = null; }
+  if (!pedido) document.getElementById('g-nada')!.hidden = false;
+  else {
+    document.getElementById('g-pedido')!.hidden = false;
+    document.getElementById('g-numero')!.textContent = pedido.numero;
+    document.getElementById('g-total')!.textContent = formatoEuros(pedido.total);
+    const plazo = pedido.envio === 'tienda' ? 'Te avisaremos cuando esté listo para recogerlo en la tienda.' : pedido.envio === 'express' ? 'Lo recibirás en 24 horas.' : 'Lo recibirás en 2 a 4 días laborables.';
+    document.getElementById('g-texto')!.textContent = `Gracias, ${String(pedido.nombre).split(' ')[0]}. Te enviaremos la confirmación por correo. ${plazo}`;
+    document.getElementById('g-lineas')!.innerHTML = pedido.lineas.map((l) => `<tr><td>${l.nombre}</td><td class="num">${l.cantidad}</td><td class="num">${formatoEuros(l.precio * l.cantidad)}</td></tr>`).join('');
+  }
+</script>

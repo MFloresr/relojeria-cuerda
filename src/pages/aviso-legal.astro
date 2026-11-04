@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import { sitio } from '../lib/sitio';
+const r = sitio.responsableLegal;
+---
+
+<Base titulo="Aviso legal" descripcion="Información legal del titular de esta web." noindex>
+  <div class="contenedor cabecera-pagina"><h1>Aviso legal</h1></div>
+  <section class="seccion legal" style="padding-top:8px">
+    <div class="contenedor">
+      <p class="aviso aviso--demo" style="max-width:72ch">Plantilla de ejemplo. Los datos entre corchetes los rellena el cliente y el texto lo revisa su asesor antes de publicar.</p>
+      <h2>Titular de la web</h2>
+      <ul class="lista" style="max-width:72ch">
+        <li>Denominación social: {r.razonSocial}</li>
+        <li>NIF: {r.nif}</li>
+        <li>Domicilio: {r.domicilio}</li>
+        <li>Correo electrónico: {sitio.email}</li>
+        <li>Teléfono: {sitio.telefonoVisible}</li>
+        <li>Datos registrales: {r.registro}</li>
+      </ul>
+      <h2>Condiciones de uso</h2>
+      <p>El acceso y el uso de esta web atribuyen la condición de usuario e implican la aceptación de estas condiciones. El titular puede modificar los contenidos en cualquier momento.</p>
+      <p>Los precios, las características y la disponibilidad de los relojes son orientativos y pueden cambiar sin aviso. La información de la web no constituye una oferta vinculante hasta que se formalice por escrito.</p>
+      <h2>Propiedad intelectual</h2>
+      <p>Los textos, el diseño y el código de la web pertenecen a su titular o se usan con licencia. Las fotografías de terceros llevan su autoría y licencia en la página de <a class="enlace" href="/creditos/">créditos</a>.</p>
+      <h2>Responsabilidad</h2>
+      <p>El titular no se hace responsable de los daños derivados de un uso inadecuado de la web ni de los contenidos de las páginas externas a las que enlaza.</p>
+      <h2>Legislación aplicable</h2>
+      <p>Estas condiciones se rigen por la legislación española. Para cualquier controversia, las partes se someten a los juzgados y tribunales que correspondan según la ley.</p>
+    </div>
+  </section>
+</Base>

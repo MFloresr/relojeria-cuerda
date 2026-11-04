@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import creditos from '../lib/creditos.json';
+---
+
+<Base titulo="Créditos de las fotos" descripcion="Autoría y licencia de las fotografías de esta web, procedentes de Wikimedia Commons.">
+  <div class="contenedor cabecera-pagina">
+    <h1>Créditos de las fotos</h1>
+    <p>Las fotografías proceden de Wikimedia Commons y se usan con sus licencias libres. Aquí tienes el autor de cada una.</p>
+  </div>
+  <section class="seccion" style="padding-top:24px">
+    <div class="contenedor">
+      <div class="tabla-envoltorio">
+        <table>
+          <caption class="solo-lectores">Autoría y licencia de cada fotografía</caption>
+          <thead><tr><th scope="col">Dónde se usa</th><th scope="col">Foto</th><th scope="col">Autor</th><th scope="col">Licencia</th></tr></thead>
+          <tbody>
+            {creditos.map((c) => (
+              <tr>
+                <td>{c.uso}</td>
+                <td><a class="enlace" href={c.pagina} rel="noopener">{c.titulo}</a></td>
+                <td>{c.autor}</td>
+                <td>{c.licencia_url ? <a class="enlace" href={c.licencia_url} rel="noopener">{c.licencia}</a> : c.licencia}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="letra-pequena" style="margin-top:16px">Las fotos con licencia CC BY-SA se muestran sin modificar su contenido; solo se han redimensionado y comprimido para la web.</p>
+    </div>
+  </section>
+</Base>

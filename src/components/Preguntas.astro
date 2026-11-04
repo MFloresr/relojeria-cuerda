@@ -1,0 +1,22 @@
+---
+import { getPreguntas } from '../lib/contenido';
+interface Props { tema?: string; titulo?: string }
+const { tema, titulo = 'Preguntas frecuentes' } = Astro.props;
+const preguntas = await getPreguntas(tema);
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: preguntas.map((p) => ({ '@type': 'Question', name: p.data.pregunta, acceptedAnswer: { '@type': 'Answer', text: p.data.respuesta } })),
+};
+---
+
+<section class="preguntas" aria-labelledby="titulo-preguntas">
+  <h2 id="titulo-preguntas">{titulo}</h2>
+  {preguntas.map((p) => (
+    <details>
+      <summary>{p.data.pregunta}</summary>
+      <p>{p.data.respuesta}</p>
+    </details>
+  ))}
+  <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />
+</section>

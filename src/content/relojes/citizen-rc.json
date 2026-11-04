@@ -1,0 +1,30 @@
+{
+  "marca": "Citizen",
+  "modelo": "Eco-Drive Radiocontrolado",
+  "categoria": "campo",
+  "movimiento": "solar",
+  "estado": "nuevo",
+  "diametro": 43,
+  "grosor": 12,
+  "entreasas": 50,
+  "atm": 10,
+  "cristal": "Mineral",
+  "caja": "Acero",
+  "correa": "Nylon",
+  "anchoCorrea": 22,
+  "peso": 96,
+  "precio": 349,
+  "stock": 4,
+  "foto": "../../assets/fotos/citizen-rc.jpg",
+  "fotoAlt": "Citizen Eco-Drive radiocontrolado con correa de nylon negra, vista frontal, trasera y lateral",
+  "destacado": false,
+  "novedad": false,
+  "resumen": "Se ajusta solo a la hora oficial y se carga con la luz.",
+  "descripcion": "Recibe la señal horaria por radio y se pone en hora sin que tengas que tocarlo. Esfera de estilo piloto, carga solar y correa de nylon.",
+  "extras": [
+    "Hora radiocontrolada",
+    "Carga solar",
+    "Esfera de estilo piloto"
+  ],
+  "garantiaMeses": 36
+}

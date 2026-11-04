@@ -1,0 +1,31 @@
+{
+  "marca": "Seiko",
+  "modelo": "Diver 200 m (segunda mano)",
+  "categoria": "buceo",
+  "movimiento": "automatico",
+  "estado": "vintage",
+  "diametro": 42,
+  "grosor": 13,
+  "entreasas": 49,
+  "atm": 20,
+  "cristal": "Mineral",
+  "caja": "Acero",
+  "correa": "Acero",
+  "anchoCorrea": 22,
+  "peso": 170,
+  "precio": 279,
+  "stock": 1,
+  "foto": "../../assets/fotos/v-seiko-diver.jpg",
+  "fotoAlt": "Seiko Diver 200 m automático con bisel negro y brazalete de acero sobre fondo azul",
+  "destacado": false,
+  "novedad": false,
+  "resumen": "Un buceador automático de segunda mano, muy bien cuidado.",
+  "descripcion": "Reloj de buceo automático con brazalete de acero, revisado en nuestro taller. Hermético a 200 metros, con cristal y juntas comprobados.",
+  "extras": [
+    "Pieza única",
+    "Juntas cambiadas",
+    "Revisado en taller",
+    "Garantía de 12 meses"
+  ],
+  "garantiaMeses": 12
+}

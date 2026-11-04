@@ -1,0 +1,30 @@
+{
+  "marca": "Swatch",
+  "modelo": "Once Again",
+  "categoria": "diario",
+  "movimiento": "cuarzo",
+  "estado": "nuevo",
+  "diametro": 34,
+  "grosor": 10,
+  "entreasas": 39,
+  "atm": 3,
+  "cristal": "Mineral",
+  "caja": "Plástico",
+  "correa": "Silicona",
+  "anchoCorrea": 17,
+  "peso": 28,
+  "precio": 69,
+  "stock": 18,
+  "foto": "../../assets/fotos/swatch-onceagain.jpg",
+  "fotoAlt": "Swatch Once Again negro con esfera blanca y calendario",
+  "destacado": false,
+  "novedad": false,
+  "resumen": "Ligero, divertido y con fecha: el reloj para todos los días.",
+  "descripcion": "Caja de 34 mm, correa de silicona y esfera blanca de lectura clara. Es muy ligero y apenas se nota en la muñeca.",
+  "extras": [
+    "Calendario",
+    "Muy ligero",
+    "Correa de silicona"
+  ],
+  "garantiaMeses": 36
+}

@@ -1,0 +1,5 @@
+[
+  { "id": "o1", "nombre": "Marta", "compra": "Compró un reloj automático", "texto": "Me midieron la muñeca y me dijeron que el que yo quería me quedaría enorme. Me recomendaron otro y acertaron." },
+  { "id": "o2", "nombre": "Carles", "compra": "Revisión de un reloj heredado", "texto": "Me enseñaron el mecanismo abierto y me explicaron qué estaba gastado. Volvió a funcionar como nuevo." },
+  { "id": "o3", "nombre": "Aina", "compra": "Compra online", "texto": "Llegó en 48 horas, bien embalado, y me cambiaron la correa por otra sin cobrarme el envío." }
+]

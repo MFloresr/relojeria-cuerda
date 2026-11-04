@@ -1,0 +1,29 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { getEntradas } from '../../lib/contenido';
+
+const entradas = await getEntradas();
+const fecha = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Base titulo="Blog de relojes" descripcion="Guías sobre cómo elegir un reloj, medir la muñeca, entender los movimientos y cuidarlos.">
+  <div class="contenedor cabecera-pagina">
+    <h1>Blog</h1>
+    <p>Guías cortas y claras para elegir y cuidar un reloj.</p>
+  </div>
+  <section class="seccion" style="padding-top:24px">
+    <div class="contenedor entradas">
+      {entradas.map((e) => (
+        <article class="entrada">
+          <Image src={e.data.foto} alt={e.data.fotoAlt} widths={[400, 700]} sizes="(min-width: 960px) 30vw, 100vw" />
+          <div class="entrada__cuerpo">
+            <p class="entrada__meta">{e.data.categoria} · {fecha.format(e.data.fecha)} · {e.data.minutos} min</p>
+            <h2 style="font-size:1.6rem;margin-bottom:8px"><a href={`/blog/${e.id}/`} style="text-decoration:none">{e.data.titulo}</a></h2>
+            <p>{e.data.resumen}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</Base>

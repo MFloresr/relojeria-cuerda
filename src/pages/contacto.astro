@@ -1,0 +1,68 @@
+---
+import Base from '../layouts/Base.astro';
+import Formulario from '../components/Formulario.astro';
+import AbiertoAhora from '../components/AbiertoAhora.astro';
+import { getRelojes } from '../lib/contenido';
+import { sitio } from '../lib/sitio';
+import { nombreReloj } from '../lib/util';
+
+const relojes = await getRelojes();
+const { direccion: d } = sitio;
+---
+
+<Base titulo="Contacto y cómo llegar" descripcion={`Contacta con ${sitio.nombre}: teléfono, WhatsApp, correo y dirección. Horario de tienda y taller.`}>
+  <div class="contenedor cabecera-pagina">
+    <h1>Contacto</h1>
+    <p>Llámanos, escríbenos o pásate por la tienda. Respondemos en el próximo día laborable.</p>
+  </div>
+  <section class="seccion" style="padding-top:24px">
+    <div class="contenedor dos dos--desigual" style="align-items:start">
+      <Formulario tipo="contacto" boton="Enviar el mensaje">
+        <div>
+          <label for="m-asunto">Asunto</label>
+          <select id="m-asunto" name="asunto">
+            <option value="reloj">Quiero información sobre un reloj</option>
+            <option value="valoracion">Quiero que valoréis mi reloj</option>
+            <option value="regalo">Busco un regalo</option>
+            <option value="pedido">Mi pedido</option>
+            <option value="taller">Taller</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div>
+          <label for="m-reloj">Reloj (si es sobre uno)</label>
+          <select id="m-reloj" name="reloj"><option value="">Ninguno en concreto</option>{relojes.map((r) => <option value={r.id}>{nombreReloj(r.data)}</option>)}</select>
+        </div>
+        <div><label for="m-nombre">Nombre <span class="marca" aria-hidden="true">*</span></label><input id="m-nombre" name="nombre" type="text" autocomplete="name" required /><p class="error" data-error-para="nombre"></p></div>
+        <div><label for="m-email">Correo <span class="marca" aria-hidden="true">*</span></label><input id="m-email" name="email" type="email" autocomplete="email" required /><p class="error" data-error-para="email"></p></div>
+        <div class="ancho-total"><label for="m-msg">Mensaje <span class="marca" aria-hidden="true">*</span></label><textarea id="m-msg" name="mensaje" required></textarea><p class="error" data-error-para="mensaje"></p></div>
+      </Formulario>
+      <aside>
+        <h2 style="font-size:1.8rem">La tienda</h2>
+        <p><AbiertoAhora /></p>
+        <p>{d.calle}<br />{d.cp} {d.ciudad} ({d.provincia})</p>
+        <ul class="lista">
+          <li>Teléfono: <a class="enlace" href={`tel:${sitio.telefono}`}>{sitio.telefonoVisible}</a></li>
+          <li>WhatsApp: <a class="enlace" href={`https://wa.me/${sitio.whatsapp}`}>escríbenos</a></li>
+          <li>Correo: <a class="enlace" href={`mailto:${sitio.email}`}>{sitio.email}</a></li>
+        </ul>
+        <div class="tabla-envoltorio">
+          <table>
+            <caption class="solo-lectores">Horario</caption>
+            <tbody>{sitio.horarios.map((h) => <tr><th scope="row">{h.etiqueta}</th><td class="num">{h.tramos.length ? h.tramos.map((t) => `${t.abre} a ${t.cierra}`).join(' y ') : 'Cerrado'}</td></tr>)}</tbody>
+          </table>
+        </div>
+        <p style="margin-top:16px"><a class="btn btn--sec" href={sitio.mapa} rel="noopener">Abrir el mapa</a></p>
+        <p class="letra-pequena">El mapa se abre en otra página, así que esta web no carga nada de terceros.</p>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const q = new URLSearchParams(location.search);
+  const asunto = document.getElementById('m-asunto') as HTMLSelectElement | null;
+  const reloj = document.getElementById('m-reloj') as HTMLSelectElement | null;
+  if (asunto && q.get('asunto')) asunto.value = q.get('asunto')!;
+  if (reloj && q.get('reloj')) reloj.value = q.get('reloj')!;
+</script>

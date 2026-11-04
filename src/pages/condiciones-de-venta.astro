@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import { sitio } from '../lib/sitio';
+import { euros } from '../lib/util';
+const r = sitio.responsableLegal;
+---
+
+<Base titulo="Condiciones de venta" descripcion="Condiciones de compra en la tienda online: precios, pago, envío, desistimiento y garantía." noindex>
+  <div class="contenedor cabecera-pagina"><h1>Condiciones de venta</h1></div>
+  <section class="seccion legal" style="padding-top:8px">
+    <div class="contenedor">
+      <p class="aviso aviso--demo" style="max-width:72ch">Plantilla de ejemplo. El cliente y su asesor deben revisarla y completarla antes de abrir la tienda online.</p>
+      <h2>1. Quién vende</h2>
+      <p>{r.razonSocial}, con NIF {r.nif} y domicilio en {r.domicilio}. Contacto: <a class="enlace" href={`mailto:${sitio.email}`}>{sitio.email}</a>.</p>
+      <h2>2. Precios</h2>
+      <p>Los precios incluyen el IVA ({sitio.iva} %) y se muestran en euros. Los gastos de envío se indican antes de confirmar el pedido; el envío estándar es gratuito a partir de {euros(sitio.envio.gratisDesde)}.</p>
+      <h2>3. Cómo se compra</h2>
+      <p>Al confirmar el pedido aceptas estas condiciones. Te enviaremos un correo con el resumen. El contrato se perfecciona cuando confirmamos la disponibilidad del reloj; en las piezas vintage, que son únicas, nos reservamos la posibilidad de cancelar si se ha vendido en tienda.</p>
+      <h2>4. Formas de pago</h2>
+      <p>Tarjeta, transferencia o pago al recoger en tienda. El pago con tarjeta se realiza en la pasarela de un proveedor externo; esta web no recoge ni guarda los datos de tu tarjeta. [Indicar el proveedor.]</p>
+      <h2>5. Envío y entrega</h2>
+      <p>Plazos: {sitio.envio.plazoEstandar} en envío estándar y {sitio.envio.plazoExpress} en exprés, contados desde la confirmación del pago. Ver <a class="enlace" href="/envios-y-devoluciones/">envíos y devoluciones</a>.</p>
+      <h2>6. Derecho de desistimiento</h2>
+      <p>Tienes 14 días naturales desde la recepción para desistir de la compra sin indicar el motivo, salvo en productos personalizados. Para ejercerlo, escríbenos indicando el pedido. Reembolsaremos el importe en un máximo de 14 días desde que recibamos el reloj.</p>
+      <h2>7. Garantía</h2>
+      <p>Los relojes nuevos tienen 3 años de garantía legal, y los de segunda mano, 12 meses. Ver <a class="enlace" href="/garantia/">garantía</a>.</p>
+      <h2>8. Reclamaciones</h2>
+      <p>Puedes dirigirte a nosotros por correo o presentar una reclamación en la plataforma europea de resolución de litigios en línea. [El cliente completa los datos de las hojas de reclamaciones y del organismo de consumo.]</p>
+    </div>
+  </section>
+</Base>

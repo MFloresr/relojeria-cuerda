@@ -1,0 +1,31 @@
+{
+  "marca": "Seiko",
+  "modelo": "5 Sports GMT",
+  "categoria": "campo",
+  "movimiento": "automatico",
+  "estado": "nuevo",
+  "diametro": 43,
+  "grosor": 13,
+  "entreasas": 51,
+  "atm": 10,
+  "cristal": "Hardlex",
+  "caja": "Acero",
+  "correa": "Acero",
+  "anchoCorrea": 22,
+  "peso": 148,
+  "precio": 429,
+  "stock": 6,
+  "foto": "../../assets/fotos/seiko5-ssk003.jpg",
+  "fotoAlt": "Seiko 5 Sports GMT con bisel azul y rojo y brazalete de acero, dentro de su caja",
+  "destacado": true,
+  "novedad": false,
+  "resumen": "Automático de viaje con segundo huso horario y bisel bicolor.",
+  "descripcion": "Movimiento automático con función GMT para seguir otra hora, bisel azul y rojo y brazalete de acero. Un reloj de uso diario que también sirve para viajar.",
+  "extras": [
+    "Movimiento automático",
+    "Segundo huso horario",
+    "Fecha",
+    "Se entrega en su caja"
+  ],
+  "garantiaMeses": 36
+}

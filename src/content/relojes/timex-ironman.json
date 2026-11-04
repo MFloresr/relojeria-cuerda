@@ -1,0 +1,32 @@
+{
+  "marca": "Timex",
+  "modelo": "Ironman 30 vueltas",
+  "categoria": "digital",
+  "movimiento": "digital",
+  "estado": "nuevo",
+  "diametro": 40,
+  "grosor": 13,
+  "entreasas": 46,
+  "atm": 10,
+  "cristal": "Acrílico",
+  "caja": "Resina",
+  "correa": "Resina",
+  "anchoCorrea": 20,
+  "peso": 55,
+  "precio": 59.9,
+  "stock": 14,
+  "foto": "../../assets/fotos/timex-ironman.jpg",
+  "fotoAlt": "Timex Ironman digital con detalles naranjas y botones de cronómetro",
+  "destacado": false,
+  "novedad": false,
+  "resumen": "Cronómetro de 30 vueltas para entrenar sin complicaciones.",
+  "descripcion": "Memoria de 30 vueltas, temporizador y luz Indiglo. Un reloj de deporte sencillo y resistente al agua hasta 100 metros.",
+  "extras": [
+    "30 vueltas en memoria",
+    "Luz Indiglo",
+    "Temporizador",
+    "Hermético 100 m"
+  ],
+  "garantiaMeses": 36,
+  "ajuste": "cover"
+}

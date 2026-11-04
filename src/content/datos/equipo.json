@@ -1,0 +1,5 @@
+[
+  { "id": "joan", "nombre": "Joan Ferrer", "cargo": "Relojero", "texto": "Treinta años con la lupa puesta. Revisa y deja a punto cada reloj que sale de la tienda." },
+  { "id": "irene", "nombre": "Irene Solà", "cargo": "Atención y ventas", "texto": "Te ayuda a encontrar el reloj que te queda bien, sin vender lo que no necesitas." },
+  { "id": "pau", "nombre": "Pau Mestres", "cargo": "Tienda online y envíos", "texto": "Prepara y embala los pedidos, y contesta tus dudas por correo y WhatsApp." }
+]

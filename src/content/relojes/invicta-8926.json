@@ -1,0 +1,31 @@
+{
+  "marca": "Invicta",
+  "modelo": "Pro Diver 8926",
+  "categoria": "buceo",
+  "movimiento": "automatico",
+  "estado": "nuevo",
+  "diametro": 40,
+  "grosor": 13,
+  "entreasas": 47,
+  "atm": 20,
+  "cristal": "Mineral",
+  "caja": "Acero",
+  "correa": "Acero",
+  "anchoCorrea": 20,
+  "peso": 140,
+  "precio": 109,
+  "stock": 10,
+  "foto": "../../assets/fotos/invicta-8926.jpg",
+  "fotoAlt": "Invicta Pro Diver 8926 automático con esfera azul oscuro y brazalete de acero",
+  "destacado": true,
+  "novedad": false,
+  "resumen": "Buceador automático con esfera azul para empezar sin gastar mucho.",
+  "descripcion": "Movimiento automático, bisel giratorio y brazalete de acero a un precio contenido. Una buena puerta de entrada al mundo de los relojes mecánicos.",
+  "extras": [
+    "Movimiento automático",
+    "Bisel giratorio",
+    "Hermético 200 m",
+    "Fecha"
+  ],
+  "garantiaMeses": 36
+}

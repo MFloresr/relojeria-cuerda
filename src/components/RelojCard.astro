@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets';
+import { euros, mm, nombreReloj, ETIQUETA_CATEGORIA, ETIQUETA_MOVIMIENTO, NBSP, type Reloj } from '../lib/util';
+
+interface Props { reloj: Reloj; prioridad?: boolean }
+const { reloj, prioridad = false } = Astro.props;
+const d = reloj.data;
+---
+
+<article
+  class="tarjeta"
+  data-reloj
+  data-id={reloj.id}
+  data-marca={d.marca}
+  data-categoria={d.categoria}
+  data-movimiento={d.movimiento}
+  data-estado={d.estado}
+  data-precio={d.precio}
+  data-diametro={d.diametro}
+  data-atm={d.atm}
+  data-novedad={d.novedad ? '1' : '0'}
+  data-ajuste={d.ajuste}
+>
+  <div class="tarjeta__foto">
+    <Image src={d.foto} alt={d.fotoAlt} widths={[320, 520, 720]} sizes="(min-width: 960px) 22vw, 50vw" loading={prioridad ? 'eager' : 'lazy'} />
+    <div class="tarjeta__marca">
+      {d.estado === 'vintage' && <span class="etiqueta etiqueta--clara">Vintage</span>}
+      {d.novedad && <span class="etiqueta etiqueta--lume">Novedad</span>}
+      {d.precioAnterior && <span class="etiqueta etiqueta--rojo">Oferta</span>}
+      {d.stock <= 3 && d.stock > 0 && d.estado !== 'vintage' && <span class="etiqueta etiqueta--clara">Últimas unidades</span>}
+    </div>
+  </div>
+  <div class="tarjeta__cuerpo">
+    <p class="tarjeta__marca-nombre">{d.marca}</p>
+    <h3 class="tarjeta__titulo"><a href={`/tienda/${reloj.id}/`}>{d.modelo}</a></h3>
+    <p class="tarjeta__datos num">
+      {ETIQUETA_CATEGORIA[d.categoria]} · {ETIQUETA_MOVIMIENTO[d.movimiento]} · {mm(d.diametro)}
+    </p>
+    <p class="encaje" data-encaje-etiqueta hidden></p>
+    <div class="tarjeta__pie">
+      <div class="precio num">{d.precioAnterior && <s>{euros(d.precioAnterior)}</s>}{euros(d.precio)}</div>
+    </div>
+    <label class="tarjeta__comparar"><input type="checkbox" data-comparar={reloj.id} />Comparar<span class="solo-lectores"> {nombreReloj(d)}</span></label>
+  </div>
+</article>

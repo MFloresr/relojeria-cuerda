@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import Catalogo from '../../components/Catalogo.astro';
+import { getRelojes } from '../../lib/contenido';
+
+const relojes = await getRelojes();
+---
+
+<Base titulo="Tienda de relojes" descripcion="Relojes nuevos y vintage de buceo, vestir, campo, digitales y deportivos. Filtra por tu muñeca, movimiento, resistencia al agua y precio.">
+  <div class="contenedor cabecera-pagina">
+    <h1>Tienda</h1>
+    <p>Indica el contorno de tu muñeca y marcamos los relojes que te quedan bien. Envío gratis desde 60 €.</p>
+  </div>
+  <section class="seccion" style="padding-top:16px">
+    <div class="contenedor"><Catalogo relojes={relojes} mostrarEstado /></div>
+  </section>
+</Base>

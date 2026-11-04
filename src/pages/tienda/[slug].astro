@@ -1,0 +1,131 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import RelojCard from '../../components/RelojCard.astro';
+import { getRelojes, getRelacionados } from '../../lib/contenido';
+import { sitio } from '../../lib/sitio';
+import { AYUDA_MOVIMIENTO, ETIQUETA_CATEGORIA, ETIQUETA_MOVIMIENTO, euros, gramos, metros, mm, nombreReloj, sinIva, usoAgua, type Reloj } from '../../lib/util';
+
+export async function getStaticPaths() {
+  const relojes = await getRelojes();
+  return relojes.map((reloj) => ({ params: { slug: reloj.id }, props: { reloj } }));
+}
+
+const { reloj } = Astro.props as { reloj: Reloj };
+const d = reloj.data;
+const relacionados = await getRelacionados(reloj);
+const filas: [string, string][] = [
+  ['Marca', d.marca],
+  ['Modelo', d.modelo],
+  ['Estilo', ETIQUETA_CATEGORIA[d.categoria]],
+  ['Movimiento', ETIQUETA_MOVIMIENTO[d.movimiento]],
+  ['Diámetro de la caja', mm(d.diametro)],
+  ['Grosor', mm(d.grosor)],
+  ['Distancia entre asas', mm(d.entreasas)],
+  ['Material de la caja', d.caja],
+  ['Cristal', d.cristal],
+  ['Correa', `${d.correa}, ${mm(d.anchoCorrea)} de ancho`],
+  ['Resistencia al agua', `${d.atm} atm (${metros(d.atm)})`],
+  ['Peso', gramos(d.peso)],
+  ['Garantía', `${d.garantiaMeses} meses`],
+];
+const agotado = d.stock <= 0;
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: nombreReloj(d),
+  description: d.resumen,
+  brand: { '@type': 'Brand', name: d.marca },
+  category: 'Reloj de pulsera',
+  itemCondition: d.estado === 'vintage' ? 'https://schema.org/UsedCondition' : 'https://schema.org/NewCondition',
+  offers: { '@type': 'Offer', priceCurrency: 'EUR', price: d.precio, availability: agotado ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock', seller: { '@type': 'Organization', name: sitio.nombre } },
+};
+---
+
+<Base titulo={`${nombreReloj(d)}`} descripcion={`${nombreReloj(d)}${d.estado === 'vintage' ? ' vintage' : ''} por ${euros(d.precio)}. ${d.resumen}`} jsonld={jsonld}>
+  <div class="contenedor">
+    <nav class="migas" aria-label="Migas de pan"><a href="/">Inicio</a> / <a href={d.estado === 'vintage' ? '/vintage/' : '/tienda/'}>{d.estado === 'vintage' ? 'Vintage' : 'Tienda'}</a> / <span aria-current="page">{nombreReloj(d)}</span></nav>
+    <div class="ficha-reloj">
+      <div>
+        <div class="ficha-reloj__foto"><Image src={d.foto} alt={d.fotoAlt} widths={[600, 900, 1300]} sizes="(min-width: 960px) 55vw, 100vw" loading="eager" fetchpriority="high" /></div>
+        <div style="margin-top:32px">
+          <h2>Cómo es</h2>
+          <p class="texto">{d.descripcion}</p>
+          {d.extras.length > 0 && (<><h3>Qué incluye</h3><ul class="lista">{d.extras.map((e) => <li>{e}</li>)}</ul></>)}
+        </div>
+        <div style="margin-top:32px">
+          <h2>Ficha técnica</h2>
+          <dl class="ficha">{filas.map(([a, b]) => <div><dt>{a}</dt><dd>{b}</dd></div>)}</dl>
+          <p class="letra-pequena" style="margin-top:12px">Medidas orientativas. {usoAgua(d.atm)}. {AYUDA_MOVIMIENTO[d.movimiento]}</p>
+        </div>
+      </div>
+
+      <aside class="ficha-reloj__lateral" aria-label="Precio y compra">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+          {d.estado === 'vintage' ? <span class="etiqueta etiqueta--clara">Vintage · pieza única</span> : <span class="etiqueta">{ETIQUETA_CATEGORIA[d.categoria]}</span>}
+          {d.novedad && <span class="etiqueta etiqueta--lume">Novedad</span>}
+          {d.precioAnterior && <span class="etiqueta etiqueta--rojo">Oferta</span>}
+        </div>
+        <p class="ficha-reloj__marca" translate="no">{d.marca}</p>
+        <h1>{d.modelo}</h1>
+        <p class="gris" style="margin:0">{d.resumen}</p>
+        <p class="ficha-reloj__precio num">{d.precioAnterior && <s style="font-size:1.4rem;color:var(--gris);margin-right:8px">{euros(d.precioAnterior)}</s>}{euros(d.precio)}</p>
+        <p class="letra-pequena" style="margin:0 0 14px">IVA incluido ({euros(d.precio - sinIva(d.precio, sitio.iva))}). Envío gratis desde {euros(sitio.envio.gratisDesde)}.</p>
+        <p style="margin:0 0 4px">
+          <span class="stock" data-bajo={d.stock > 0 && d.stock <= 3 ? '' : undefined} data-agotado={agotado ? '' : undefined}>
+            {agotado ? 'Agotado' : d.estado === 'vintage' ? 'Pieza única disponible' : d.stock <= 3 ? `Quedan ${d.stock} unidades` : 'En stock, envío en 24 horas'}
+          </span>
+        </p>
+        <div class="ficha-reloj__acciones">
+          <button class="btn btn--rojo btn--bloque" type="button" data-anadir={reloj.id} data-stock={d.stock} data-nombre={nombreReloj(d)} disabled={agotado}>{agotado ? 'Agotado' : 'Añadir al carrito'}</button>
+          <a class="btn btn--sec btn--bloque" href={`/contacto/?asunto=reloj&reloj=${reloj.id}`}>Preguntar por este reloj</a>
+          <label class="tarjeta__comparar" style="margin-top:0;border-top:0;padding-top:0"><input type="checkbox" data-comparar={reloj.id} />Añadir al comparador</label>
+        </div>
+
+        <div class="campo" id="encaje-caja" data-diametro={d.diametro} style="margin-top:18px;padding-top:18px;border-top:1px solid var(--linea)">
+          <label for="e-muneca">¿Cómo te queda? Contorno de tu muñeca (cm)</label>
+          <input id="e-muneca" type="number" min="12" max="24" step="0.5" inputmode="decimal" placeholder="Por ejemplo, 17" />
+          <p class="encaje" id="e-resultado" hidden style="margin-top:10px"></p>
+        </div>
+
+        <ul class="ventajas">
+          <li>Envío en {sitio.envio.plazoEstandar}</li>
+          <li>14 días para devolverlo</li>
+          <li>{d.garantiaMeses} meses de garantía{d.estado === 'vintage' ? ', con revisión en taller' : ''}</li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+
+  <section class="seccion">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2>Otros relojes que pueden gustarte</h2></div>
+      <div class="rejilla">{relacionados.map((r) => <RelojCard reloj={r} />)}</div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const caja = document.getElementById('encaje-caja');
+  const entrada = document.getElementById('e-muneca') as HTMLInputElement | null;
+  const salida = document.getElementById('e-resultado');
+  if (caja && entrada && salida) {
+    const d = Number(caja.dataset.diametro);
+    const textos: Record<string, string> = {
+      ideal: 'Te queda muy bien: el tamaño es el que mejor te favorece.',
+      bien: 'Te queda bien: se lleva con comodidad.',
+      grande: 'Te quedará grande: probablemente sobresalga de la muñeca.',
+      pequeno: 'Te quedará pequeño: puede que lo prefieras con más caja.',
+    };
+    const actualizar = () => {
+      const c = Number(entrada.value);
+      if (!c) { salida.hidden = true; return; }
+      const dif = d - 2.35 * c;
+      const e = Math.abs(dif) <= 2.5 ? 'ideal' : Math.abs(dif) <= 4.5 ? 'bien' : dif > 0 ? 'grande' : 'pequeno';
+      salida.hidden = false; salida.dataset.encaje = e; salida.textContent = textos[e];
+    };
+    entrada.addEventListener('input', actualizar);
+    const q = new URLSearchParams(location.search).get('muneca');
+    if (q) { entrada.value = q; actualizar(); }
+  }
+</script>

@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import { sitio } from '../lib/sitio';
+const r = sitio.responsableLegal;
+---
+
+<Base titulo="Política de privacidad" descripcion="Cómo tratamos tus datos personales cuando compras, nos escribes o pides cita." noindex>
+  <div class="contenedor cabecera-pagina"><h1>Política de privacidad</h1></div>
+  <section class="seccion legal" style="padding-top:8px">
+    <div class="contenedor">
+      <p class="aviso aviso--demo" style="max-width:72ch">Plantilla de ejemplo. El cliente y su asesor deben revisarla y completarla antes de publicar, sobre todo al conectar la pasarela de pago, el correo o cualquier herramienta de analítica.</p>
+      <h2>Quién es el responsable</h2>
+      <p>{r.razonSocial}, con NIF {r.nif} y domicilio en {r.domicilio}. Puedes escribirnos a <a class="enlace" href={`mailto:${sitio.email}`}>{sitio.email}</a>.</p>
+      <h2>Qué datos tratamos y para qué</h2>
+      <ul class="lista">
+        <li><strong>Pedidos:</strong> nombre, correo, teléfono, dirección, relojes comprados y forma de envío y pago, para gestionar la venta, el envío y la facturación.</li>
+        <li><strong>Formulario de contacto:</strong> nombre, correo y mensaje, para responder a tu consulta.</li>
+        <li><strong>Cita de taller:</strong> nombre, teléfono, reloj y servicio, para organizar la cita.</li>
+      </ul>
+      <h2>Base jurídica</h2>
+      <p>La ejecución del contrato de compra, el cumplimiento de obligaciones legales (por ejemplo, fiscales) y, en los formularios de consulta, tu consentimiento al marcar la casilla.</p>
+      <h2>Cuánto tiempo los guardamos</h2>
+      <p>El tiempo necesario para atender tu solicitud y, después, durante los plazos legales que correspondan (por ejemplo, los de conservación de facturas). [El cliente fija los plazos concretos.]</p>
+      <h2>A quién los comunicamos</h2>
+      <p>A la empresa de transporte para entregarte el pedido, y a la entidad de pago si pagas con tarjeta. No vendemos tus datos. Usamos proveedores de alojamiento y de correo como encargados del tratamiento. [Indicar proveedores y ubicación.]</p>
+      <h2>Tus derechos</h2>
+      <p>Puedes pedir el acceso, la rectificación, la supresión, la oposición, la limitación y la portabilidad de tus datos escribiéndonos al correo de arriba. Si crees que no los tratamos bien, puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).</p>
+    </div>
+  </section>
+</Base>

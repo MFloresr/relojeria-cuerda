@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import Preguntas from '../components/Preguntas.astro';
+import { sitio } from '../lib/sitio';
+import { euros } from '../lib/util';
+const e = sitio.envio;
+---
+
+<Base titulo="Envíos y devoluciones" descripcion="Plazos y costes de envío, recogida en tienda y cómo devolver un reloj en 14 días.">
+  <div class="contenedor cabecera-pagina">
+    <h1>Envíos y devoluciones</h1>
+    <p>Envío gratis desde {euros(e.gratisDesde)} y 14 días para devolver sin dar explicaciones.</p>
+  </div>
+  <section class="seccion" style="padding-top:24px">
+    <div class="contenedor dos dos--desigual" style="align-items:start">
+      <div>
+        <h2>Envíos</h2>
+        <div class="tabla-envoltorio">
+          <table>
+            <caption class="solo-lectores">Opciones de envío</caption>
+            <thead><tr><th scope="col">Opción</th><th scope="col">Plazo</th><th scope="col" class="num">Precio</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Estándar</th><td>{e.plazoEstandar}</td><td class="num">{euros(e.estandar)}, gratis desde {euros(e.gratisDesde)}</td></tr>
+              <tr><th scope="row">Exprés</th><td>{e.plazoExpress}</td><td class="num">{euros(e.express)}</td></tr>
+              <tr><th scope="row">Recogida en tienda</th><td>El mismo día, si lo pides antes de las 13:00</td><td class="num">Gratis</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="letra-pequena" style="margin-top:12px">Envíos a la península. Para Baleares, Canarias, Ceuta, Melilla y el extranjero, escríbenos y te damos precio.</p>
+        <h2 style="margin-top:1.6em">Cómo embalamos</h2>
+        <p class="texto">Cada reloj sale en su caja, protegido en una funda y dentro de un paquete rígido. Los vintage viajan asegurados.</p>
+      </div>
+      <div>
+        <h2>Devoluciones</h2>
+        <ol class="texto" style="padding-left:1.2em">
+          <li>Tienes <strong>14 días naturales</strong> desde que lo recibes para desistir de la compra.</li>
+          <li>Escríbenos a <a class="enlace" href={`mailto:${sitio.email}`}>{sitio.email}</a> diciendo qué quieres devolver.</li>
+          <li>Devuélvelo sin usar, con precintos y en su caja. Te reembolsamos en un máximo de 14 días.</li>
+        </ol>
+        <p class="texto">Los costes de devolución corren por tu cuenta, salvo que el reloj llegue defectuoso o no sea el que pediste.</p>
+        <p class="texto">Los relojes personalizados o con el brazalete ajustado a tu medida no admiten desistimiento.</p>
+      </div>
+    </div>
+  </section>
+  <section class="seccion seccion--papel"><div class="contenedor"><Preguntas tema="envios" titulo="Preguntas sobre envíos" /></div></section>
+</Base>

@@ -1,0 +1,63 @@
+---
+// Elementos y comportamiento compartidos por todas las páginas: contador del carrito, aviso al añadir,
+// botones "Añadir al carrito" ([data-anadir]) y casillas de comparar ([data-comparar]).
+---
+
+<div class="aviso-carrito" id="aviso-carrito" role="status" aria-live="polite" hidden></div>
+<div class="comparar-barra" id="comparar-barra" data-n="0">
+  <span id="comparar-texto"></span>
+  <span style="display:flex;gap:8px;flex-wrap:wrap">
+    <a class="btn btn--claro btn--peq" href="/comparar/">Comparar ahora</a>
+    <button class="btn btn--borde-claro btn--peq" type="button" id="comparar-vaciar">Vaciar</button>
+  </span>
+</div>
+
+<script>
+  import { anadir, guardarComparar, leerCarrito, leerComparar, MAX_COMPARAR, totalArticulos } from '../lib/carrito';
+
+  const contador = () => {
+    const n = totalArticulos();
+    document.querySelectorAll<HTMLElement>('[data-contador-carrito]').forEach((c) => { c.dataset.n = String(n); c.textContent = String(n); });
+    document.querySelector('[data-carrito-enlace]')?.setAttribute('aria-label', n === 0 ? 'Carrito vacío' : n === 1 ? 'Carrito, 1 artículo' : `Carrito, ${n} artículos`);
+  };
+
+  const aviso = document.getElementById('aviso-carrito')!;
+  let temporizador: number | undefined;
+  const mostrar = (html: string) => {
+    aviso.innerHTML = html; aviso.hidden = false;
+    clearTimeout(temporizador); temporizador = window.setTimeout(() => (aviso.hidden = true), 5000);
+  };
+
+  document.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-anadir]');
+    if (!b) return;
+    const id = b.dataset.anadir!, stock = Number(b.dataset.stock || '1'), nombre = b.dataset.nombre || 'El reloj';
+    if (anadir(id, stock)) mostrar(`<span>${nombre} está en tu carrito.</span><a href="/carrito/">Ver el carrito</a>`);
+    else mostrar(`<span>Ya tienes todas las unidades disponibles en el carrito.</span><a href="/carrito/">Verlo</a>`);
+  });
+
+  const barra = document.getElementById('comparar-barra')!;
+  const textoBarra = document.getElementById('comparar-texto')!;
+  const pintarComparar = () => {
+    const ids = leerComparar();
+    barra.dataset.n = String(ids.length);
+    textoBarra.textContent = ids.length === 1 ? 'Has elegido 1 reloj. Elige otro para compararlos.' : `Has elegido ${ids.length} relojes (máximo ${MAX_COMPARAR}).`;
+    document.querySelectorAll<HTMLInputElement>('[data-comparar]').forEach((i) => (i.checked = ids.includes(i.dataset.comparar!)));
+  };
+  document.addEventListener('change', (e) => {
+    const i = e.target as HTMLInputElement;
+    if (!i.matches?.('[data-comparar]')) return;
+    let ids = leerComparar();
+    if (i.checked) {
+      if (ids.length >= MAX_COMPARAR) { i.checked = false; mostrar(`<span>Puedes comparar como máximo ${MAX_COMPARAR} relojes a la vez.</span>`); return; }
+      ids = [...ids, i.dataset.comparar!];
+    } else ids = ids.filter((x) => x !== i.dataset.comparar);
+    guardarComparar(ids);
+  });
+  document.getElementById('comparar-vaciar')!.addEventListener('click', () => guardarComparar([]));
+  document.addEventListener('cuerda:carrito', contador);
+  document.addEventListener('cuerda:comparar', pintarComparar);
+  window.addEventListener('storage', () => { contador(); pintarComparar(); });
+  contador(); pintarComparar();
+  void leerCarrito;
+</script>

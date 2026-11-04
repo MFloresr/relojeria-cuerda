@@ -1,0 +1,31 @@
+{
+  "marca": "Hamilton",
+  "modelo": "Khaki Field",
+  "categoria": "campo",
+  "movimiento": "automatico",
+  "estado": "nuevo",
+  "diametro": 42,
+  "grosor": 11,
+  "entreasas": 49,
+  "atm": 10,
+  "cristal": "Zafiro",
+  "caja": "Acero",
+  "correa": "Cuero",
+  "anchoCorrea": 20,
+  "peso": 88,
+  "precio": 549,
+  "stock": 4,
+  "foto": "../../assets/fotos/hamilton-khaki.jpg",
+  "fotoAlt": "Hamilton Khaki Field con esfera negra de números arábigos y correa de cuero marrón",
+  "destacado": true,
+  "novedad": false,
+  "resumen": "Un reloj de campo de esfera clara y herencia militar.",
+  "descripcion": "Esfera de números grandes que se lee de un vistazo, cristal de zafiro y correa de cuero. Sencillo, robusto y fácil de combinar.",
+  "extras": [
+    "Cristal de zafiro",
+    "Movimiento automático",
+    "Números luminosos",
+    "Correa de cuero"
+  ],
+  "garantiaMeses": 36
+}

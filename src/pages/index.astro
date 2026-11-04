@@ -1,0 +1,166 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Esfera from '../components/Esfera.astro';
+import Buscador from '../components/Buscador.astro';
+import RelojCard from '../components/RelojCard.astro';
+import AbiertoAhora from '../components/AbiertoAhora.astro';
+import { getRelojes, getNuevos, getVintage, getEntradas, getOpiniones } from '../lib/contenido';
+import { sitio } from '../lib/sitio';
+import { ETIQUETA_CATEGORIA, euros } from '../lib/util';
+import correa from '../assets/fotos/correa-alligator.jpg';
+import movimiento from '../assets/fotos/movimiento.jpg';
+
+const todos = await getRelojes();
+const destacados = (await getNuevos()).filter((r) => r.data.destacado).slice(0, 4);
+const vintage = (await getVintage()).slice(0, 3);
+const entradas = (await getEntradas()).slice(0, 3);
+const opiniones = await getOpiniones();
+const colecciones = Object.entries(
+  todos.reduce<Record<string, number>>((acc, r) => ({ ...acc, [r.data.categoria]: (acc[r.data.categoria] ?? 0) + 1 }), {}),
+);
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'WatchStore',
+  name: sitio.nombre,
+  description: sitio.descripcion,
+  url: sitio.url,
+  telephone: sitio.telefono,
+  email: sitio.email,
+  address: { '@type': 'PostalAddress', streetAddress: sitio.direccion.calle, postalCode: sitio.direccion.cp, addressLocality: sitio.direccion.ciudad, addressRegion: sitio.direccion.provincia, addressCountry: 'ES' },
+};
+---
+
+<Base titulo="Relojería independiente: relojes, correas y taller" jsonld={jsonld}>
+  <section class="hero" aria-labelledby="titulo-hero">
+    <div class="contenedor hero__fila">
+      <div class="hero__texto">
+        <h1 id="titulo-hero">El reloj que te queda bien.</h1>
+        <p>Relojes nuevos y vintage, revisados por nuestro relojero y elegidos para tu muñeca. Si no te favorece, te lo decimos.</p>
+        <div class="hero__acciones">
+          <a class="btn btn--rojo" href="/tienda/">Ver la tienda</a>
+          <a class="btn btn--borde-claro" href="/guia-muneca/">Medir mi muñeca</a>
+        </div>
+      </div>
+      <div>
+        <Esfera />
+        <p class="hero__pie-esfera">La hora, ahora mismo en Barcelona.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" aria-labelledby="t-buscador">
+    <div class="contenedor dos dos--desigual" style="align-items:start">
+      <Buscador relojes={todos} />
+      <div>
+        <h2 id="t-buscador">Antes de elegir, mide.</h2>
+        <p class="texto">Un reloj precioso en la muñeca equivocada no se disfruta. Con el contorno de tu muñeca te decimos qué diámetro de caja te sienta mejor, y marcamos en la tienda los que te quedan bien.</p>
+        <div class="foto-recta" style="margin-top:20px"><Image src={correa} alt="Correa de cuero marrón con textura de cocodrilo" widths={[500, 800]} sizes="(min-width: 900px) 40vw, 100vw" style="aspect-ratio:16/9" /></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--papel" aria-labelledby="t-colecciones">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="t-colecciones">Elige por estilo</h2><p>Del buceador al vestir, pasando por el digital de toda la vida.</p></div>
+      <div class="colecciones">
+        {colecciones.map(([c, n]) => (
+          <a class="coleccion" href={`/tienda/?categoria=${c}`}><strong>{ETIQUETA_CATEGORIA[c]}</strong><span>{n} {n === 1 ? 'reloj' : 'relojes'}</span></a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" aria-labelledby="t-destacados">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="t-destacados">Nuestros favoritos</h2><a class="enlace" href="/tienda/">Ver toda la tienda</a></div>
+      <div class="rejilla">{destacados.map((r) => <RelojCard reloj={r} />)}</div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--esfera" aria-labelledby="t-vintage">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="t-vintage">Vintage revisado en nuestro taller</h2><p>Cada pieza es única. La desmontamos, la limpiamos y la regulamos antes de ponerla a la venta, con 12 meses de garantía.</p></div>
+      <div class="rejilla">{vintage.map((r) => <RelojCard reloj={r} />)}</div>
+      <p style="margin-top:28px"><a class="btn btn--borde-claro" href="/vintage/">Ver todo el vintage</a></p>
+    </div>
+  </section>
+
+  <section class="seccion" aria-labelledby="t-entender">
+    <div class="contenedor dos">
+      <div class="foto-recta"><Image src={movimiento} alt="Mecanismo automático de un reloj visto por la tapa trasera" widths={[500, 800, 1100]} sizes="(min-width: 900px) 45vw, 100vw" /></div>
+      <div>
+        <h2 id="t-entender">Automático, cuarzo o solar</h2>
+        <p class="texto">Los tres son fiables. Cambia cómo funcionan por dentro, y por eso cambia lo que esperas de ellos:</p>
+        <ul class="lista">
+          <li><strong>Automático:</strong> se carga con el movimiento de tu muñeca. Tiene alma y se puede revisar durante décadas.</li>
+          <li><strong>Cuarzo:</strong> funciona con una pila y es muy preciso. Para olvidarte de él.</li>
+          <li><strong>Solar:</strong> se carga con la luz y no necesita pilas.</li>
+        </ul>
+        <a class="btn btn--sec" href="/blog/automatico-cuarzo-o-solar/">Leer la guía completa</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--papel" aria-labelledby="t-compra">
+    <div class="contenedor">
+      <h2 id="t-compra" class="solo-lectores">Comprar con confianza</h2>
+      <div class="opiniones">
+        <div class="opinion"><h3>Envío gratis desde {euros(sitio.envio.gratisDesde)}</h3><p style="margin:0">Recíbelo en {sitio.envio.plazoEstandar}, o en 24 horas con el envío exprés.</p></div>
+        <div class="opinion"><h3>14 días para devolverlo</h3><p style="margin:0">Si no te convence, lo devuelves sin dar explicaciones.</p></div>
+        <div class="opinion"><h3>3 años de garantía</h3><p style="margin:0">En relojes nuevos. Los vintage, 12 meses y revisados por nuestro relojero.</p></div>
+        <div class="opinion"><h3>Taller propio</h3><p style="margin:0">Pilas, correas, revisiones y estanqueidad, en la misma tienda.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" aria-labelledby="t-opiniones">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="t-opiniones">Lo que cuentan los clientes</h2></div>
+      <div class="opiniones">
+        {opiniones.map((o) => (
+          <figure class="opinion"><blockquote>“{o.data.texto}”</blockquote><figcaption><strong>{o.data.nombre}</strong>{o.data.compra}</figcaption></figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--papel" aria-labelledby="t-blog">
+    <div class="contenedor">
+      <div class="cabecera-seccion"><h2 id="t-blog">Para entender de relojes</h2><a class="enlace" href="/blog/">Ver todos los artículos</a></div>
+      <div class="entradas">
+        {entradas.map((e) => (
+          <article class="entrada">
+            <Image src={e.data.foto} alt={e.data.fotoAlt} widths={[400, 700]} sizes="(min-width: 960px) 30vw, 100vw" />
+            <div class="entrada__cuerpo">
+              <p class="entrada__meta">{e.data.categoria} · {e.data.minutos} min de lectura</p>
+              <h3><a href={`/blog/${e.id}/`}>{e.data.titulo}</a></h3>
+              <p>{e.data.resumen}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" aria-labelledby="t-donde">
+    <div class="contenedor dos">
+      <div>
+        <h2 id="t-donde">Ven a probártelo</h2>
+        <p><AbiertoAhora /></p>
+        <p>{sitio.direccion.calle}<br />{sitio.direccion.cp} {sitio.direccion.ciudad} ({sitio.direccion.provincia})</p>
+        <p>Teléfono: <a class="enlace" href={`tel:${sitio.telefono}`}>{sitio.telefonoVisible}</a></p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="/contacto/">Cómo llegar</a><a class="btn btn--sec" href={`https://wa.me/${sitio.whatsapp}`}>Escríbenos por WhatsApp</a></div>
+      </div>
+      <div class="tabla-envoltorio">
+        <table>
+          <caption class="solo-lectores">Horario de la tienda y el taller</caption>
+          <thead><tr><th scope="col">Día</th><th scope="col">Horario</th></tr></thead>
+          <tbody>
+            {sitio.horarios.map((h) => <tr><th scope="row">{h.etiqueta}</th><td class="num">{h.tramos.length ? h.tramos.map((t) => `${t.abre} a ${t.cierra}`).join(' y ') : 'Cerrado'}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</Base>

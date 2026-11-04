@@ -1,0 +1,31 @@
+{
+  "marca": "Casio",
+  "modelo": "G-Shock DW-9052",
+  "categoria": "digital",
+  "movimiento": "digital",
+  "estado": "nuevo",
+  "diametro": 46,
+  "grosor": 15,
+  "entreasas": 52,
+  "atm": 20,
+  "cristal": "Mineral",
+  "caja": "Resina",
+  "correa": "Resina",
+  "anchoCorrea": 24,
+  "peso": 56,
+  "precio": 119,
+  "stock": 9,
+  "foto": "../../assets/fotos/gshock-dw9052.jpg",
+  "fotoAlt": "Casio G-Shock DW-9052 negro con pantalla digital y detalles dorados",
+  "destacado": false,
+  "novedad": false,
+  "resumen": "Resistente a golpes, a 200 metros y a lo que le eches.",
+  "descripcion": "Caja de resina con protección frente a impactos, hermético hasta 200 metros y con cronómetro, temporizador y alarmas. Un reloj de trabajo para la muñeca que más golpes se lleva.",
+  "extras": [
+    "Resistente a golpes",
+    "Hermético 200 m",
+    "Luz de fondo",
+    "Hora mundial"
+  ],
+  "garantiaMeses": 36
+}

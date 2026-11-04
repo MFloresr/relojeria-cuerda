@@ -1,0 +1,44 @@
+---
+import { menu, sitio } from '../lib/sitio';
+interface Props { ruta: string }
+const { ruta } = Astro.props;
+const actual = (href: string) => (ruta === href || (href !== '/' && ruta.startsWith(href)) ? 'page' : undefined);
+---
+
+<header class="cabecera">
+  <div class="contenedor cabecera__fila">
+    <a class="logo" href="/" translate="no"><span class="logo__punto" aria-hidden="true"></span>Cuerda<span class="solo-lectores"> Relojería, ir al inicio</span></a>
+    <nav class="nav" aria-label="Principal">
+      <ul>
+        {menu.map((m) => <li><a href={m.href} aria-current={actual(m.href)}>{m.texto}</a></li>)}
+      </ul>
+    </nav>
+    <div class="cabecera__acciones">
+      <a class="icono-btn" href="/carrito/" aria-label="Carrito" data-carrito-enlace>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a1.5 1.5 0 0 1-1.5 1.3H7.7a1.5 1.5 0 0 1-1.5-1.3L5 8Z" /><path d="M9 8V6.5a3 3 0 0 1 6 0V8" /></svg>
+        <span class="contador" data-contador-carrito data-n="0" aria-hidden="true">0</span>
+      </a>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="menu-movil" aria-label="Abrir el menú"><span></span></button>
+    </div>
+  </div>
+  <div class="menu-movil" id="menu-movil">
+    <ul>
+      {menu.map((m) => <li><a href={m.href} aria-current={actual(m.href)}>{m.texto}</a></li>)}
+      <li><a href="/nosotros/">Quiénes somos</a></li>
+      <li><a href="/contacto/">Contacto</a></li>
+    </ul>
+  </div>
+</header>
+
+<script>
+  const boton = document.querySelector<HTMLButtonElement>('.burger');
+  const menu = document.getElementById('menu-movil');
+  boton?.addEventListener('click', () => {
+    const abierto = menu!.classList.toggle('abierto');
+    boton.setAttribute('aria-expanded', String(abierto));
+    boton.setAttribute('aria-label', abierto ? 'Cerrar el menú' : 'Abrir el menú');
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu?.classList.contains('abierto')) { menu.classList.remove('abierto'); boton?.setAttribute('aria-expanded', 'false'); boton?.focus(); }
+  });
+</script>

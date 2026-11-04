@@ -1,0 +1,79 @@
+---
+// Formulario con validación en el navegador. Sin endpoint configurado funciona en modo demostración.
+// Para activarlo: definir PUBLIC_FORM_ENDPOINT (p. ej. una función serverless que envíe el correo con Resend).
+import { sitio } from '../lib/sitio';
+
+interface Props { tipo: 'contacto' | 'prueba' | 'cita' | 'valoracion'; boton?: string; mensajeOk?: string; id?: string }
+const { tipo, boton = 'Enviar', mensajeOk = 'Mensaje enviado. Te respondemos en el próximo día laborable.', id = `form-${tipo}` } = Astro.props;
+---
+
+<form class="formulario" id={id} novalidate data-tipo={tipo} data-endpoint={sitio.endpointFormularios} data-ok={mensajeOk}>
+  <div class="rejilla-campos">
+    <slot />
+    <div class="ancho-total">
+      <label class="casilla">
+        <input type="checkbox" name="consentimiento" required />
+        <span>He leído la <a href="/privacidad/">política de privacidad</a> y acepto que se usen mis datos para responderme.</span>
+      </label>
+      <p class="error" data-error-para="consentimiento"></p>
+    </div>
+    <div class="honeypot" aria-hidden="true"><label>No rellenes este campo <input type="text" name="web" tabindex="-1" autocomplete="off" /></label></div>
+    <div class="ancho-total">
+      <button class="btn" type="submit">{boton}</button>
+      <div role="status" aria-live="polite" data-estado></div>
+    </div>
+  </div>
+</form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('form.formulario').forEach((f) => {
+    const estado = f.querySelector<HTMLElement>('[data-estado]')!;
+    const campos = () => [...f.querySelectorAll<HTMLInputElement>('input[required], select[required], textarea[required]')];
+    const mensaje = (c: HTMLInputElement) => {
+      if (c.validity.valueMissing) return c.type === 'checkbox' ? 'Necesitamos que aceptes la política de privacidad.' : 'Este campo es obligatorio.';
+      if (c.validity.typeMismatch) return c.type === 'email' ? 'Escribe un correo válido, por ejemplo nombre@correo.com.' : 'El valor no es válido.';
+      if (c.validity.patternMismatch) return c.title || 'El formato no es válido.';
+      return '';
+    };
+    const validar = (c: HTMLInputElement) => {
+      const m = mensaje(c);
+      const error = f.querySelector<HTMLElement>(`[data-error-para="${c.name}"]`);
+      if (error) error.textContent = m;
+      c.setAttribute('aria-invalid', m ? 'true' : 'false');
+      return !m;
+    };
+    campos().forEach((c) => c.addEventListener('blur', () => validar(c)));
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      estado.innerHTML = '';
+      const todos = campos().map(validar);
+      if (todos.includes(false)) {
+        campos().find((c) => c.getAttribute('aria-invalid') === 'true')?.focus();
+        return;
+      }
+      const datos = Object.fromEntries(new FormData(f).entries());
+      if (datos.web) return; // trampa para robots
+      delete datos.web;
+      const boton = f.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      const textoBoton = boton.textContent;
+      boton.disabled = true;
+      boton.textContent = 'Enviando…';
+      try {
+        const url = f.dataset.endpoint;
+        if (url) {
+          const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo: f.dataset.tipo, ...datos }) });
+          if (!r.ok) throw new Error(String(r.status));
+          estado.innerHTML = `<p class="aviso">${f.dataset.ok}</p>`;
+        } else {
+          estado.innerHTML = `<p class="aviso">${f.dataset.ok}</p><p class="aviso aviso--demo">Modo demostración: este formulario todavía no está conectado a un correo, así que no se ha enviado nada.</p>`;
+        }
+        f.reset();
+      } catch {
+        estado.innerHTML = '<p class="aviso aviso--error">No hemos podido enviar el mensaje. Inténtalo de nuevo o llámanos al teléfono de contacto.</p>';
+      } finally {
+        boton.disabled = false;
+        boton.textContent = textoBoton;
+      }
+    });
+  });
+</script>

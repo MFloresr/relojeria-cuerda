@@ -1,0 +1,32 @@
+{
+  "marca": "Casio",
+  "modelo": "G-Shock Rangeman",
+  "categoria": "deportivo",
+  "movimiento": "solar",
+  "estado": "nuevo",
+  "diametro": 54,
+  "grosor": 18,
+  "entreasas": 57,
+  "atm": 20,
+  "cristal": "Mineral",
+  "caja": "Resina",
+  "correa": "Resina",
+  "anchoCorrea": 26,
+  "peso": 91,
+  "precio": 299,
+  "precioAnterior": 329,
+  "stock": 5,
+  "foto": "../../assets/fotos/gshock-rangeman.jpg",
+  "fotoAlt": "Casio G-Shock Rangeman gris con tres sensores y esfera digital",
+  "destacado": false,
+  "novedad": false,
+  "resumen": "Brújula, altímetro y barómetro para salir al monte.",
+  "descripcion": "Triple sensor con brújula, altímetro y barómetro, carga solar y radiocontrol de la hora. Es grande, así que conviene probárselo antes en muñecas finas.",
+  "extras": [
+    "Triple sensor",
+    "Carga solar",
+    "Hora radiocontrolada",
+    "Hermético 200 m"
+  ],
+  "garantiaMeses": 36
+}

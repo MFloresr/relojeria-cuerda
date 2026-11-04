@@ -1,0 +1,32 @@
+{
+  "marca": "Tissot",
+  "modelo": "Bridgeport Automático",
+  "categoria": "vestir",
+  "movimiento": "automatico",
+  "estado": "nuevo",
+  "diametro": 42,
+  "grosor": 11,
+  "entreasas": 49,
+  "atm": 3,
+  "cristal": "Zafiro",
+  "caja": "Acero",
+  "correa": "Acero",
+  "anchoCorrea": 20,
+  "peso": 130,
+  "precio": 449,
+  "stock": 3,
+  "foto": "../../assets/fotos/tissot-bridgeport.jpg",
+  "fotoAlt": "Tissot Bridgeport automático con esfera plateada y brazalete de acero en una muñeca",
+  "destacado": true,
+  "novedad": false,
+  "resumen": "Un vestir automático, discreto y de esfera plateada.",
+  "descripcion": "Esfera plateada con números romanos, cristal de zafiro y movimiento automático. Un reloj elegante para el traje y para el día a día.",
+  "extras": [
+    "Cristal de zafiro",
+    "Movimiento automático",
+    "Fecha",
+    "Brazalete de acero"
+  ],
+  "garantiaMeses": 36,
+  "ajuste": "cover"
+}
